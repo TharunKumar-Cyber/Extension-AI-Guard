@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from backend.app.models.network_request import NetworkRequest
 from backend.app.services.database import database_status
+from backend.app.services.detection import analyze_request
 
 
 router = APIRouter(
@@ -25,7 +26,10 @@ def database_connection_status():
 
 @router.post("/network-requests")
 def create_network_request(request: NetworkRequest):
+    result = analyze_request(request)
+
     return {
-        "status": "received",
+        "status": "analyzed",
         "request": request.model_dump(),
+        "detection": result.model_dump(),
     }
