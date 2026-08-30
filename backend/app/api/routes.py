@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+from backend.app.models.network_request import NetworkRequest
 from backend.app.services.database import database_status
 
 
@@ -20,3 +21,11 @@ def status():
 @router.get("/database-status")
 def database_connection_status():
     return database_status()
+
+
+@router.post("/network-requests")
+def create_network_request(request: NetworkRequest):
+    return {
+        "status": "received",
+        "request": request.model_dump(),
+    }
