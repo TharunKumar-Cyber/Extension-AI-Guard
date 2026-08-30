@@ -10428,3 +10428,5981 @@
 
 **This subsystem connects the core detection technologies of Extension AI Guard into a unified real-time security workflow.**
 
+
+
+
+
+**## 20. Backend API and Supabase Integration Architecture**
+
+
+
+**The Backend API and Supabase Integration subsystem provides the central application layer connecting the frontend, authentication system, database, ML inference engine, traffic-analysis pipeline, AI Security Assistant, and alerting system.**
+
+
+
+**The backend will use FastAPI to provide controlled REST APIs while Supabase/PostgreSQL will provide persistent application data storage.**
+
+
+
+**The backend will act as the security boundary between users and internal project services.**
+
+
+
+**### 20.1 Backend Architecture**
+
+
+
+**The high-level backend architecture is:**
+
+
+
+**```text**
+
+**React Frontend**
+
+&#x20;     **↓**
+
+**FastAPI Backend**
+
+&#x20;     **↓**
+
+**Authentication / Authorization**
+
+&#x20;     **↓**
+
+**API Validation**
+
+&#x20;     **↓**
+
+**Application Services**
+
+&#x20;     **↓**
+
+**┌─────┼──────────┬───────────┐**
+
+**↓     ↓          ↓           ↓**
+
+**DB    ML       Traffic      Alerts**
+
+**↓     ↓          ↓           ↓**
+
+**Supabase  Inference   Processing   n8n**
+
+**20.2 Backend Responsibilities**
+
+
+
+**The backend will be responsible for:**
+
+
+
+**User authentication integration.**
+
+**Authorization.**
+
+**Role management.**
+
+**API request validation.**
+
+**Test-session management.**
+
+**Detection management.**
+
+**Traffic-analysis coordination.**
+
+**ML inference coordination.**
+
+**Database operations.**
+
+**Audit logging.**
+
+**Dashboard data delivery.**
+
+**Alert coordination.**
+
+**Security-policy enforcement.**
+
+**20.3 Frontend-to-Backend Flow**
+
+
+
+**The frontend will communicate with the backend through HTTPS APIs.**
+
+
+
+**The basic flow is:**
+
+
+
+**User**
+
+&#x20;**↓**
+
+**React Frontend**
+
+&#x20;**↓**
+
+**HTTPS Request**
+
+&#x20;**↓**
+
+**FastAPI**
+
+&#x20;**↓**
+
+**Authentication**
+
+&#x20;**↓**
+
+**Authorization**
+
+&#x20;**↓**
+
+**Validation**
+
+&#x20;**↓**
+
+**Application Logic**
+
+&#x20;**↓**
+
+**Response**
+
+&#x20;**↓**
+
+**React Frontend**
+
+
+
+**The frontend will not directly access protected internal services.**
+
+
+
+**20.4 API Layer**
+
+
+
+**FastAPI will provide the application's REST API layer.**
+
+
+
+**The API will be organized into logical groups rather than placing all functionality into a single large endpoint module.**
+
+
+
+**Conceptual groups include:**
+
+
+
+**/api/auth**
+
+**/api/users**
+
+**/api/tests**
+
+**/api/extensions**
+
+**/api/traffic**
+
+**/api/detections**
+
+**/api/models**
+
+**/api/research**
+
+**/api/dashboard**
+
+**/api/alerts**
+
+**/api/health**
+
+
+
+**The final endpoint names will be defined during implementation.**
+
+
+
+**20.5 Authentication**
+
+
+
+**Authentication will establish the identity of the requesting user.**
+
+
+
+**The architecture will support the authentication mechanism defined in the project's authentication design.**
+
+
+
+**Conceptually:**
+
+
+
+**User Login**
+
+&#x20;   **↓**
+
+**Authentication Provider**
+
+&#x20;   **↓**
+
+**Identity Token**
+
+&#x20;   **↓**
+
+**Frontend**
+
+&#x20;   **↓**
+
+**FastAPI**
+
+&#x20;   **↓**
+
+**Token Validation**
+
+&#x20;   **↓**
+
+**Authenticated User**
+
+
+
+**The backend will never trust an identity value supplied only through normal request data.**
+
+
+
+**20.6 OAuth2 / JWT**
+
+
+
+**The authentication architecture may use OAuth2-compatible flows and JWT-based access tokens where appropriate.**
+
+
+
+**The backend will validate:**
+
+
+
+**Token authenticity.**
+
+**Token expiration.**
+
+**Issuer where applicable.**
+
+**Audience where applicable.**
+
+**Required claims.**
+
+**User identity.**
+
+**Authorization context.**
+
+
+
+**The exact configuration will be finalized during implementation.**
+
+
+
+**20.7 Authorization**
+
+
+
+**Authentication answers:**
+
+
+
+**Who are you?**
+
+
+
+**Authorization answers:**
+
+
+
+**What are you allowed to do?**
+
+
+
+**The backend will enforce authorization for protected operations.**
+
+
+
+**The conceptual flow is:**
+
+
+
+**Request**
+
+&#x20;**↓**
+
+**Authentication**
+
+&#x20;**↓**
+
+**User Identity**
+
+&#x20;**↓**
+
+**Role / Permission Check**
+
+&#x20;**↓**
+
+**Allowed?**
+
+&#x20;**├── YES → Continue**
+
+&#x20;**└── NO  → Reject**
+
+**20.8 User Roles**
+
+
+
+**The application will support role-based access control.**
+
+
+
+**Initial conceptual roles include:**
+
+
+
+**Beginner**
+
+**Analyst**
+
+**Researcher**
+
+**Administrator**
+
+
+
+**The final role definitions will be implemented according to the project's authorization requirements.**
+
+
+
+**20.9 Beginner Permissions**
+
+
+
+**A beginner user may be allowed to:**
+
+
+
+**Start guided tests.**
+
+**View their own test results.**
+
+**View simplified detections.**
+
+**Use the AI Security Assistant.**
+
+**View basic security explanations.**
+
+
+
+**A beginner should not automatically receive access to sensitive system configuration or administrative functions.**
+
+
+
+**20.10 Analyst Permissions**
+
+
+
+**An analyst may be allowed to:**
+
+
+
+**Run controlled analyses.**
+
+**View detailed traffic information.**
+
+**View detection evidence.**
+
+**Review detection history.**
+
+**Inspect model information.**
+
+**Investigate suspicious behavior.**
+
+
+
+**Analyst permissions will remain restricted to authorized project resources.**
+
+
+
+**20.11 Researcher Permissions**
+
+
+
+**A researcher may be allowed to:**
+
+
+
+**Access ML experiments.**
+
+**View datasets.**
+
+**Run approved research experiments.**
+
+**Compare classical and quantum models.**
+
+**View research metrics.**
+
+**Inspect experiment metadata.**
+
+
+
+**Research access will be separated from ordinary user workflows.**
+
+
+
+**20.12 Administrator Permissions**
+
+
+
+**An administrator may manage:**
+
+
+
+**Users.**
+
+**Roles.**
+
+**System configuration.**
+
+**Approved models.**
+
+**Application settings.**
+
+**Audit information.**
+
+**Operational controls.**
+
+
+
+**Administrative operations will require stronger authorization controls.**
+
+
+
+**20.13 Supabase Integration**
+
+
+
+**Supabase/PostgreSQL will provide persistent storage for application data.**
+
+
+
+**The backend will communicate with the database through controlled server-side operations.**
+
+
+
+**The conceptual architecture is:**
+
+
+
+**React**
+
+&#x20; **↓**
+
+**FastAPI**
+
+&#x20; **↓**
+
+**Backend Service Layer**
+
+&#x20; **↓**
+
+**Supabase**
+
+&#x20; **↓**
+
+**PostgreSQL**
+
+
+
+**The frontend will not receive unrestricted database credentials.**
+
+
+
+**20.14 Database Security Boundary**
+
+
+
+**Database credentials and privileged service credentials will remain on the server side.**
+
+
+
+**Sensitive credentials will be stored through environment configuration or an appropriate secret-management mechanism.**
+
+
+
+**They will not be hard-coded into source files.**
+
+
+
+**20.15 Environment Configuration**
+
+
+
+**The backend will use environment-based configuration.**
+
+
+
+**Potential configuration categories include:**
+
+
+
+**Application Settings**
+
+**Database Configuration**
+
+**Authentication Configuration**
+
+**JWT Configuration**
+
+**ML Model Configuration**
+
+**Traffic Processing Configuration**
+
+**Alerting Configuration**
+
+
+
+**Secrets will be loaded from protected environment configuration.**
+
+
+
+**20.16 .env Security**
+
+
+
+**The actual environment file containing secrets will not be committed to GitHub.**
+
+
+
+**The repository will contain:**
+
+
+
+**.env.example**
+
+
+
+**with safe placeholder configuration names.**
+
+
+
+**The actual .env file will remain local or be managed through a secure deployment secret mechanism.**
+
+
+
+**20.17 API Request Validation**
+
+
+
+**FastAPI request models will validate incoming data before application logic processes it.**
+
+
+
+**Validation may include:**
+
+
+
+**Required fields.**
+
+**Data types.**
+
+**String length.**
+
+**Numeric ranges.**
+
+**Enumerated values.**
+
+**Identifier formats.**
+
+**Request size.**
+
+
+
+**Invalid requests will be rejected safely.**
+
+
+
+**20.18 API Response Structure**
+
+
+
+**The API will use consistent response structures where appropriate.**
+
+
+
+**A conceptual successful response is:**
+
+
+
+**{**
+
+&#x20;   **status,**
+
+&#x20;   **data,**
+
+&#x20;   **metadata**
+
+**}**
+
+
+
+**A conceptual error response is:**
+
+
+
+**{**
+
+&#x20;   **status,**
+
+&#x20;   **error,**
+
+&#x20;   **message**
+
+**}**
+
+
+
+**The exact schemas will be finalized during implementation.**
+
+
+
+**20.19 Error Handling**
+
+
+
+**The backend will use controlled error handling.**
+
+
+
+**The system will distinguish between:**
+
+
+
+**Client Error**
+
+**Authentication Error**
+
+**Authorization Error**
+
+**Validation Error**
+
+**Resource Error**
+
+**Processing Error**
+
+**Internal Server Error**
+
+
+
+**Users will receive safe messages while detailed technical information can be recorded in server-side logs.**
+
+
+
+**20.20 Test Session Management**
+
+
+
+**The backend will manage controlled test sessions.**
+
+
+
+**A conceptual test lifecycle is:**
+
+
+
+**Test Created**
+
+&#x20;   **↓**
+
+**Environment Checked**
+
+&#x20;   **↓**
+
+**Test Started**
+
+&#x20;   **↓**
+
+**Traffic Captured**
+
+&#x20;   **↓**
+
+**Analysis Running**
+
+&#x20;   **↓**
+
+**Detection Completed**
+
+&#x20;   **↓**
+
+**Test Completed**
+
+
+
+**The backend will maintain the status of each authorized test.**
+
+
+
+**20.21 Test Record**
+
+
+
+**A test record may contain:**
+
+
+
+**Test ID**
+
+**User ID**
+
+**Extension ID**
+
+**Test Type**
+
+**Start Time**
+
+**End Time**
+
+**Status**
+
+**Processing Status**
+
+**Detection Status**
+
+**Result Reference**
+
+
+
+**The final schema will be defined during database implementation.**
+
+
+
+**20.22 Extension Management**
+
+
+
+**The backend may maintain metadata about extensions used in controlled tests.**
+
+
+
+**Potential information includes:**
+
+
+
+**Extension identifier.**
+
+**Extension name.**
+
+**Test classification.**
+
+**Version.**
+
+**Test owner.**
+
+**Test status.**
+
+**Creation timestamp.**
+
+
+
+**The system will clearly distinguish controlled project extensions from arbitrary third-party extensions.**
+
+
+
+**20.23 Traffic Processing Coordination**
+
+
+
+**The backend may initiate or coordinate approved traffic-processing operations.**
+
+
+
+**The conceptual flow is:**
+
+
+
+**Frontend**
+
+&#x20;  **↓**
+
+**Start Test API**
+
+&#x20;  **↓**
+
+**Backend**
+
+&#x20;  **↓**
+
+**Traffic Capture Service**
+
+&#x20;  **↓**
+
+**PCAP**
+
+&#x20;  **↓**
+
+**Processing Service**
+
+&#x20;  **↓**
+
+**Features**
+
+&#x20;  **↓**
+
+**Inference Service**
+
+
+
+**The backend should coordinate the workflow rather than embedding all packet-processing logic directly into API handlers.**
+
+
+
+**20.24 ML Inference Coordination**
+
+
+
+**The backend will communicate with the inference component through a controlled service interface.**
+
+
+
+**The flow is:**
+
+
+
+**Processed Features**
+
+&#x20;      **↓**
+
+**Backend / Inference Service**
+
+&#x20;      **↓**
+
+**Validated Model**
+
+&#x20;      **↓**
+
+**Prediction**
+
+&#x20;      **↓**
+
+**Detection Result**
+
+&#x20;      **↓**
+
+**Backend**
+
+
+
+**The exact internal communication mechanism will be selected during implementation.**
+
+
+
+**20.25 Detection API**
+
+
+
+**The backend will expose controlled endpoints for detection information.**
+
+
+
+**Possible operations include:**
+
+
+
+**Create Detection**
+
+**Get Detection**
+
+**List Detections**
+
+**Get Detection Details**
+
+**Update Review Status**
+
+
+
+**The final endpoint structure will be defined during implementation.**
+
+
+
+**20.26 Detection History**
+
+
+
+**Authorized users will be able to access appropriate detection history.**
+
+
+
+**The system may support:**
+
+
+
+**Recent Detections**
+
+**Detection by Test**
+
+**Detection by Risk**
+
+**Detection by Time**
+
+**Detection by Status**
+
+
+
+**Access will be restricted according to ownership and role.**
+
+
+
+**20.27 Dashboard API**
+
+
+
+**The dashboard will receive aggregated information through backend APIs.**
+
+
+
+**Potential dashboard data includes:**
+
+
+
+**Active tests.**
+
+**Recent detections.**
+
+**Risk distribution.**
+
+**Traffic statistics.**
+
+**Detection counts.**
+
+**Processing status.**
+
+**System status.**
+
+**Model information where authorized.**
+
+
+
+**The backend will return only information appropriate for the requesting user.**
+
+
+
+**20.28 Real-Time Events**
+
+
+
+**The backend may provide real-time updates to the frontend.**
+
+
+
+**Potential events include:**
+
+
+
+**TEST\_STARTED**
+
+**CAPTURE\_STARTED**
+
+**PROCESSING\_STARTED**
+
+**FEATURES\_READY**
+
+**DETECTION\_GENERATED**
+
+**RISK\_UPDATED**
+
+**TEST\_COMPLETED**
+
+**ALERT\_GENERATED**
+
+
+
+**The final real-time communication mechanism will be selected during implementation.**
+
+
+
+**20.29 Audit Logging**
+
+
+
+**Important backend operations will be recorded.**
+
+
+
+**Potential audit events include:**
+
+
+
+**Login.**
+
+**Logout.**
+
+**Test creation.**
+
+**Test execution.**
+
+**Detection generation.**
+
+**Detection review.**
+
+**Model deployment.**
+
+**Configuration changes.**
+
+**Administrative actions.**
+
+
+
+**Audit logs will support security investigation and accountability.**
+
+
+
+**20.30 Audit Record**
+
+
+
+**A conceptual audit record may contain:**
+
+
+
+**Audit ID**
+
+**User ID**
+
+**Action**
+
+**Resource Type**
+
+**Resource ID**
+
+**Timestamp**
+
+**Result**
+
+**Request Context**
+
+
+
+**Sensitive information will not be logged unnecessarily.**
+
+
+
+**20.31 Database Tables**
+
+
+
+**The initial database design may contain logical entities such as:**
+
+
+
+**users**
+
+**roles**
+
+**user\_roles**
+
+**extensions**
+
+**test\_sessions**
+
+**traffic\_captures**
+
+**detections**
+
+**detection\_evidence**
+
+**models**
+
+**model\_versions**
+
+**experiments**
+
+**alerts**
+
+**audit\_logs**
+
+
+
+**The final table structure will be normalized and reviewed before implementation.**
+
+
+
+**20.32 Row-Level Access**
+
+
+
+**Where appropriate, database-level access controls such as Row Level Security may be used.**
+
+
+
+**The purpose is to ensure that users cannot access records belonging to other users simply by changing an identifier in an API request.**
+
+
+
+**The authorization design will be implemented consistently between the API and database layers.**
+
+
+
+**20.33 User-Owned Resources**
+
+
+
+**Resources created by a user should be associated with an appropriate owner or authorization context.**
+
+
+
+**The conceptual relationship is:**
+
+
+
+**User**
+
+&#x20;**↓**
+
+**Test**
+
+&#x20;**↓**
+
+**Traffic Capture**
+
+&#x20;**↓**
+
+**Detection**
+
+&#x20;**↓**
+
+**Evidence**
+
+
+
+**The backend will verify ownership or appropriate role permissions before returning protected resources.**
+
+
+
+**20.34 Database Transactions**
+
+
+
+**Operations involving multiple related database records will use appropriate transaction handling where required.**
+
+
+
+**For example:**
+
+
+
+**Create Test**
+
+&#x20;  **↓**
+
+**Create Processing Record**
+
+&#x20;  **↓**
+
+**Start Analysis**
+
+
+
+**The system should avoid leaving inconsistent records when an intermediate operation fails.**
+
+
+
+**20.35 Database Integrity**
+
+
+
+**The database design will use appropriate:**
+
+
+
+**Primary keys.**
+
+**Foreign keys.**
+
+**Unique constraints.**
+
+**Not-null constraints.**
+
+**Check constraints.**
+
+**Indexes.**
+
+
+
+**These controls will reduce inconsistent application data.**
+
+
+
+**20.36 Database Indexing**
+
+
+
+**Indexes will be introduced for frequently queried fields.**
+
+
+
+**Potential indexed fields include:**
+
+
+
+**User ID.**
+
+**Test ID.**
+
+**Detection ID.**
+
+**Timestamp.**
+
+**Risk level.**
+
+**Status.**
+
+
+
+**Indexes will be added based on actual query requirements rather than indiscriminately.**
+
+
+
+**20.37 API Rate Limiting**
+
+
+
+**Sensitive or resource-intensive API operations may require rate limiting.**
+
+
+
+**Potential protected operations include:**
+
+
+
+**Authentication-related requests.**
+
+**Test creation.**
+
+**Analysis requests.**
+
+**Research experiments.**
+
+**Alert operations.**
+
+
+
+**Rate limits will be designed according to the deployment environment.**
+
+
+
+**20.38 CORS Security**
+
+
+
+**The backend will use a controlled CORS configuration.**
+
+
+
+**Only approved frontend origins will be permitted in production.**
+
+
+
+**Wildcard origins will not be used for sensitive production configurations unless explicitly justified.**
+
+
+
+**20.39 HTTPS**
+
+
+
+**Production API communication will use HTTPS.**
+
+
+
+**The architecture is:**
+
+
+
+**Browser**
+
+&#x20;  **↓**
+
+**HTTPS**
+
+&#x20;  **↓**
+
+**FastAPI**
+
+&#x20;  **↓**
+
+**Internal Services**
+
+&#x20;  **↓**
+
+**Supabase**
+
+
+
+**Sensitive information should not be transmitted through unencrypted production HTTP connections.**
+
+
+
+**20.40 Secret Management**
+
+
+
+**The system will protect:**
+
+
+
+**Database credentials.**
+
+**Authentication secrets.**
+
+**API keys.**
+
+**AI service credentials.**
+
+**Telegram credentials.**
+
+**n8n credentials.**
+
+
+
+**Secrets will not be placed directly inside source code.**
+
+
+
+**20.41 Backend Logging**
+
+
+
+**Backend logs will support operational troubleshooting and security monitoring.**
+
+
+
+**Logs may include:**
+
+
+
+**Service startup.**
+
+**API requests at appropriate levels.**
+
+**Processing status.**
+
+**Errors.**
+
+**Authentication events.**
+
+**Detection events.**
+
+
+
+**Logs should avoid unnecessary sensitive information.**
+
+
+
+**20.42 Health Checks**
+
+
+
+**The backend will provide controlled health information.**
+
+
+
+**A conceptual health endpoint is:**
+
+
+
+**GET /api/health**
+
+
+
+**The system may check:**
+
+
+
+**Backend**
+
+**Database**
+
+**ML Service**
+
+**Traffic Processor**
+
+
+
+**Detailed infrastructure information should not be exposed to unauthenticated users.**
+
+
+
+**20.43 Service Availability**
+
+
+
+**The backend should distinguish between:**
+
+
+
+**Healthy**
+
+**Degraded**
+
+**Unavailable**
+
+
+
+**For example, the API may remain available even if a research-only Quantum ML service is temporarily unavailable.**
+
+
+
+**20.44 Background Processing**
+
+
+
+**Long-running operations should not block normal API requests.**
+
+
+
+**Examples include:**
+
+
+
+**PCAP processing.**
+
+**Large dataset processing.**
+
+**ML experiments.**
+
+**Quantum simulation.**
+
+**Report generation.**
+
+
+
+**These operations may use background workers or task queues when required.**
+
+
+
+**20.45 Job Status**
+
+
+
+**Long-running operations may expose a job status.**
+
+
+
+**The conceptual lifecycle is:**
+
+
+
+**QUEUED**
+
+&#x20; **↓**
+
+**RUNNING**
+
+&#x20; **↓**
+
+**COMPLETED**
+
+
+
+**or:**
+
+
+
+**QUEUED**
+
+&#x20; **↓**
+
+**RUNNING**
+
+&#x20; **↓**
+
+**FAILED**
+
+
+
+**The frontend can use this state to display progress.**
+
+
+
+**20.46 AI Security Assistant API**
+
+
+
+**The AI Security Assistant will communicate through controlled backend interfaces.**
+
+
+
+**The backend will provide structured context such as:**
+
+
+
+**Detection Result**
+
+**Risk Level**
+
+**Evidence Summary**
+
+**Test Status**
+
+**User Role**
+
+
+
+**The assistant will not receive unrestricted database or system access.**
+
+
+
+**20.47 AI Assistant Security Boundary**
+
+
+
+**The AI assistant will be treated as an untrusted reasoning layer from a security perspective.**
+
+
+
+**It must not automatically:**
+
+
+
+**Execute operating-system commands.**
+
+**Modify database records without authorization.**
+
+**Change model configuration.**
+
+**Disable security controls.**
+
+**Access arbitrary files.**
+
+**Execute arbitrary network requests.**
+
+
+
+**Any privileged action must pass through authorized application services.**
+
+
+
+**20.48 Alerting Integration**
+
+
+
+**The backend will coordinate with the alerting system.**
+
+
+
+**The conceptual flow is:**
+
+
+
+**Detection**
+
+&#x20;  **↓**
+
+**Backend**
+
+&#x20;  **↓**
+
+**Alert Policy**
+
+&#x20;  **↓**
+
+**n8n Workflow**
+
+&#x20;  **↓**
+
+**Telegram**
+
+
+
+**The backend will not expose Telegram credentials to the frontend.**
+
+
+
+**20.49 Research API**
+
+
+
+**Research endpoints will be separated from ordinary user APIs.**
+
+
+
+**Potential research operations include:**
+
+
+
+**Create Experiment**
+
+**Run Experiment**
+
+**Get Experiment**
+
+**List Experiments**
+
+**Compare Models**
+
+**Get Experiment Metrics**
+
+
+
+**Research APIs will require appropriate authorization.**
+
+
+
+**20.50 Model Management API**
+
+
+
+**Authorized administrators or researchers may access model metadata.**
+
+
+
+**Potential operations include:**
+
+
+
+**List Models**
+
+**Get Model Version**
+
+**Approve Model**
+
+**Activate Model**
+
+**Deactivate Model**
+
+**Rollback Model**
+
+
+
+**Production model changes will require controlled authorization.**
+
+
+
+**20.51 Model Activation**
+
+
+
+**The backend will maintain a clear model activation process.**
+
+
+
+**The conceptual flow is:**
+
+
+
+**Candidate Model**
+
+&#x20;     **↓**
+
+**Evaluation**
+
+&#x20;     **↓**
+
+**Approval**
+
+&#x20;     **↓**
+
+**Activation**
+
+&#x20;     **↓**
+
+**Inference**
+
+
+
+**The system will not automatically activate every newly trained model.**
+
+
+
+**20.52 Model Rollback**
+
+
+
+**The backend should support controlled model rollback.**
+
+
+
+**The workflow is:**
+
+
+
+**Active Model**
+
+&#x20;    **↓**
+
+**Problem Identified**
+
+&#x20;    **↓**
+
+**Review**
+
+&#x20;    **↓**
+
+**Previous Validated Model**
+
+&#x20;    **↓**
+
+**Activate**
+
+
+
+**This allows the detection system to recover from an unsuitable deployment.**
+
+
+
+**20.53 API Security Testing**
+
+
+
+**The backend will be tested for common API security issues.**
+
+
+
+**Testing areas include:**
+
+
+
+**Authentication bypass.**
+
+**Authorization bypass.**
+
+**Broken object-level authorization.**
+
+**Input validation.**
+
+**Rate limiting.**
+
+**CORS configuration.**
+
+**Injection risks.**
+
+**Sensitive data exposure.**
+
+**Improper error handling.**
+
+
+
+**Testing will be performed within the project's controlled environment.**
+
+
+
+**20.54 OWASP Alignment**
+
+
+
+**The backend security design will consider relevant OWASP application-security guidance.**
+
+
+
+**Important areas include:**
+
+
+
+**Broken access control.**
+
+**Cryptographic failures.**
+
+**Injection.**
+
+**Insecure design.**
+
+**Authentication failures.**
+
+**Security logging and monitoring.**
+
+**Server-side request risks.**
+
+**Security misconfiguration.**
+
+
+
+**The project will document the relevant controls and testing results.**
+
+
+
+**20.55 Backend Deployment Architecture**
+
+
+
+**The deployment architecture will conceptually be:**
+
+
+
+**Internet / User**
+
+&#x20;      **↓**
+
+**HTTPS**
+
+&#x20;      **↓**
+
+**Frontend**
+
+&#x20;      **↓**
+
+**FastAPI Backend**
+
+&#x20;      **↓**
+
+**┌──────┼──────────┬─────────────┐**
+
+**↓      ↓          ↓             ↓**
+
+**DB     ML       Traffic       Alerts**
+
+**↓      ↓          ↓             ↓**
+
+**Supabase Inference Processor     n8n**
+
+
+
+**The exact cloud-hosting configuration will be selected after the local system is stable.**
+
+
+
+**20.56 Local Development Architecture**
+
+
+
+**During development, services may run locally.**
+
+
+
+**Example:**
+
+
+
+**React**
+
+&#x20; **↓**
+
+**Local FastAPI**
+
+&#x20; **↓**
+
+**Local Traffic Processor**
+
+&#x20; **↓**
+
+**Local ML Models**
+
+&#x20; **↓**
+
+**Supabase Development Project**
+
+
+
+**This allows the system to be developed and tested before deployment.**
+
+
+
+**20.57 Production Separation**
+
+
+
+**Production services should be separated from development resources.**
+
+
+
+**The architecture should distinguish:**
+
+
+
+**Development**
+
+&#x20;    **↓**
+
+**Testing**
+
+&#x20;    **↓**
+
+**Production**
+
+
+
+**Production credentials and production data will not be used casually during development.**
+
+
+
+**20.58 Backup and Recovery**
+
+
+
+**Important application data should have an appropriate backup and recovery strategy.**
+
+
+
+**Potential backup targets include:**
+
+
+
+**Database records.**
+
+**Model metadata.**
+
+**Experiment metadata.**
+
+**Configuration.**
+
+**Important reports.**
+
+
+
+**Raw traffic captures will follow a separate retention policy.**
+
+
+
+**20.59 Backend Monitoring**
+
+
+
+**The deployed backend will eventually monitor:**
+
+
+
+**API availability.**
+
+**Response latency.**
+
+**Error rate.**
+
+**Database connectivity.**
+
+**ML service availability.**
+
+**Processing jobs.**
+
+**Resource usage.**
+
+
+
+**Monitoring will help identify operational problems before they become major failures.**
+
+
+
+**20.60 Backend Goal**
+
+
+
+**The goal of the Backend API and Supabase subsystem is to provide a secure central control layer that connects all major Extension AI Guard components.**
+
+
+
+**The complete backend flow is:**
+
+
+
+**User**
+
+&#x20;**↓**
+
+**React Frontend**
+
+&#x20;**↓**
+
+**FastAPI**
+
+&#x20;**↓**
+
+**Authentication**
+
+&#x20;**↓**
+
+**Authorization**
+
+&#x20;**↓**
+
+**Validation**
+
+&#x20;**↓**
+
+**Application Services**
+
+&#x20;**↓**
+
+**┌──────────────┬──────────────┬──────────────┐**
+
+**↓              ↓              ↓**
+
+**Supabase       ML             Traffic**
+
+**Database       Inference      Processing**
+
+**↓              ↓              ↓**
+
+**└──────────────┴──────────────┘**
+
+&#x20;              **↓**
+
+&#x20;       **Detection Result**
+
+&#x20;              **↓**
+
+&#x20;       **Dashboard / AI**
+
+&#x20;              **↓**
+
+&#x20;         **n8n / Telegram**
+
+
+
+**The backend therefore acts as the secure integration layer connecting the user interface, data infrastructure, traffic analysis, machine learning, research components, and alerting system.**
+
+
+
+**## 21. Security Dashboard and Frontend Architecture**
+
+
+
+**The Security Dashboard and Frontend subsystem provides the primary visual interface for Extension AI Guard.**
+
+
+
+**The frontend will transform complex traffic-analysis, machine-learning, detection, research, and alerting information into a clear interface suitable for beginners, security analysts, researchers, and administrators.**
+
+
+
+**The frontend will be implemented using React.js and Tailwind CSS, with Chart.js used for appropriate data visualization.**
+
+
+
+**### 21.1 Frontend Objective**
+
+
+
+**The frontend will provide:**
+
+
+
+**- Secure user access.**
+
+**- Guided onboarding.**
+
+**- Test management.**
+
+**- Extension test controls.**
+
+**- Real-time analysis status.**
+
+**- Security risk visualization.**
+
+**- Detection results.**
+
+**- Traffic statistics.**
+
+**- ML information.**
+
+**- Research information.**
+
+**- Alert status.**
+
+**- AI-powered explanations.**
+
+
+
+**The interface will prioritize clarity while preserving access to technical information for authorized users.**
+
+
+
+**### 21.2 Frontend Architecture**
+
+
+
+**The high-level frontend architecture is:**
+
+
+
+**```text**
+
+**User**
+
+&#x20;**↓**
+
+**React Application**
+
+&#x20;**↓**
+
+**Routing**
+
+&#x20;**↓**
+
+**Authentication State**
+
+&#x20;**↓**
+
+**Role / Permission State**
+
+&#x20;**↓**
+
+**Page Components**
+
+&#x20;**↓**
+
+**API Service Layer**
+
+&#x20;**↓**
+
+**FastAPI Backend**
+
+&#x20;**↓**
+
+**Application Data**
+
+
+
+**The frontend will not contain business-critical security decisions that should be enforced by the backend.**
+
+
+
+**21.3 Frontend Technology**
+
+
+
+**The planned frontend stack is:**
+
+
+
+**React.js**
+
+**Tailwind CSS**
+
+**Chart.js**
+
+
+
+**Additional libraries may be introduced only when they provide a clear requirement.**
+
+
+
+**The project will avoid unnecessary dependencies.**
+
+
+
+**21.4 Frontend Application Structure**
+
+
+
+**The frontend will be logically separated into areas such as:**
+
+
+
+**Application**
+
+**├── Authentication**
+
+**├── Onboarding**
+
+**├── Dashboard**
+
+**├── Test Management**
+
+**├── Traffic Analysis**
+
+**├── Detection Results**
+
+**├── Research**
+
+**├── Alerts**
+
+**├── AI Assistant**
+
+**└── Administration**
+
+
+
+**The exact folder structure will be finalized during implementation.**
+
+
+
+**21.5 Routing Architecture**
+
+
+
+**The application will use protected routes where appropriate.**
+
+
+
+**A conceptual route structure is:**
+
+
+
+**/**
+
+**├── login**
+
+**├── register**
+
+**├── onboarding**
+
+**├── dashboard**
+
+**├── tests**
+
+**├── tests/:id**
+
+**├── detections**
+
+**├── detections/:id**
+
+**├── research**
+
+**├── alerts**
+
+**└── admin**
+
+
+
+**Routes will be accessible according to authentication and authorization requirements.**
+
+
+
+**21.6 Authentication State**
+
+
+
+**The frontend will maintain appropriate authentication state.**
+
+
+
+**The conceptual flow is:**
+
+
+
+**Login**
+
+&#x20;**↓**
+
+**Authentication Provider**
+
+&#x20;**↓**
+
+**Token / Session**
+
+&#x20;**↓**
+
+**Frontend Authentication State**
+
+&#x20;**↓**
+
+**Protected Application**
+
+
+
+**Sensitive tokens must be handled according to the selected authentication architecture.**
+
+
+
+**21.7 Protected Routes**
+
+
+
+**Protected routes will require authentication.**
+
+
+
+**Example:**
+
+
+
+**Unauthenticated User**
+
+&#x20;       **↓**
+
+**Protected Route**
+
+&#x20;       **↓**
+
+**Login**
+
+&#x20;       **↓**
+
+**Authentication**
+
+&#x20;       **↓**
+
+**Dashboard**
+
+
+
+**The frontend will not treat hidden navigation links as an authorization mechanism.**
+
+
+
+**The backend remains authoritative for access control.**
+
+
+
+**21.8 Role-Based Interface**
+
+
+
+**The interface may change according to the authenticated user's role.**
+
+
+
+**Example:**
+
+
+
+**Beginner**
+
+&#x20;  **↓**
+
+**Simple Dashboard**
+
+
+
+**Analyst**
+
+&#x20;  **↓**
+
+**Security Dashboard**
+
+
+
+**Researcher**
+
+&#x20;  **↓**
+
+**Research Lab**
+
+
+
+**Administrator**
+
+&#x20;  **↓**
+
+**Administration**
+
+
+
+**Role-based UI is for user experience.**
+
+
+
+**Actual authorization will still be enforced by the backend.**
+
+
+
+**21.9 First-Time Onboarding**
+
+
+
+**A first-time user will be guided through the application.**
+
+
+
+**The onboarding flow is:**
+
+
+
+**First Login**
+
+&#x20;   **↓**
+
+**Welcome**
+
+&#x20;   **↓**
+
+**What is Extension AI Guard?**
+
+&#x20;   **↓**
+
+**How the Test Works**
+
+&#x20;   **↓**
+
+**Safe Testing Environment**
+
+&#x20;   **↓**
+
+**Start First Test**
+
+
+
+**The AI Security Assistant will help explain unfamiliar concepts.**
+
+
+
+**21.10 AI Security Assistant Interface**
+
+
+
+**The AI Assistant will appear as a guided support component.**
+
+
+
+**It may provide:**
+
+
+
+**Explanations.**
+
+**Contextual help.**
+
+**Test guidance.**
+
+**Detection explanations.**
+
+**Security terminology explanations.**
+
+**Suggested next steps.**
+
+
+
+**The assistant will be designed so that it does not dominate the primary security dashboard.**
+
+
+
+**21.11 Main Dashboard**
+
+
+
+**The main dashboard will provide a high-level security overview.**
+
+
+
+**Potential sections include:**
+
+
+
+**Security Status**
+
+**Active Test**
+
+**Risk Level**
+
+**Recent Detections**
+
+**Traffic Activity**
+
+**Model Status**
+
+**Alert Status**
+
+
+
+**The dashboard should allow users to understand the current state quickly.**
+
+
+
+**21.12 Security Status Card**
+
+
+
+**A primary security-status component may display:**
+
+
+
+**Security Status**
+
+
+
+**LOW**
+
+**MEDIUM**
+
+**HIGH**
+
+
+
+**The displayed status must come from validated backend detection results.**
+
+
+
+**The frontend must not independently invent or alter the security classification.**
+
+
+
+**21.13 Active Test Card**
+
+
+
+**During an active test, the dashboard may show:**
+
+
+
+**Test Status**
+
+**Capture Status**
+
+**Processing Status**
+
+**Feature Status**
+
+**Inference Status**
+
+
+
+**Example:**
+
+
+
+**Test Running**
+
+
+
+**✓ Environment Ready**
+
+**✓ Traffic Capture**
+
+**✓ Flow Processing**
+
+**→ Feature Analysis**
+
+**○ ML Detection**
+
+**○ Final Result**
+
+**21.14 Real-Time Detection View**
+
+
+
+**The real-time detection interface may display:**
+
+
+
+**Live Traffic**
+
+&#x20;    **↓**
+
+**Processing**
+
+&#x20;    **↓**
+
+**Feature Extraction**
+
+&#x20;    **↓**
+
+**Detection**
+
+
+
+**The user should be able to understand what stage the system is currently processing.**
+
+
+
+**21.15 Risk Visualization**
+
+
+
+**Risk information may be displayed using:**
+
+
+
+**Status cards.**
+
+**Progress indicators.**
+
+**Charts.**
+
+**Tables.**
+
+**Timeline components.**
+
+
+
+**Visual indicators should be supported by textual labels so that the meaning is not dependent on color alone.**
+
+
+
+**21.16 Traffic Visualization**
+
+
+
+**Chart.js may be used for traffic-related visualization.**
+
+
+
+**Potential charts include:**
+
+
+
+**Packets over time.**
+
+**Bytes over time.**
+
+**Protocol distribution.**
+
+**Flow counts.**
+
+**Traffic direction.**
+
+**Detection events.**
+
+
+
+**Charts will be designed to remain readable with different dataset sizes.**
+
+
+
+**21.17 Detection Timeline**
+
+
+
+**The dashboard may provide a detection timeline.**
+
+
+
+**Example:**
+
+
+
+**14:01  Test Started**
+
+**14:02  Traffic Captured**
+
+**14:02  Processing Started**
+
+**14:03  Suspicious Pattern Observed**
+
+**14:03  ML Detection Generated**
+
+**14:03  Risk Updated**
+
+**14:03  Alert Created**
+
+
+
+**The exact events shown will depend on the available backend data.**
+
+
+
+**21.18 Detection Result Page**
+
+
+
+**A detection result page may contain:**
+
+
+
+**Risk Level**
+
+**Prediction**
+
+**Confidence / Probability**
+
+**Detection Time**
+
+**Test Information**
+
+**Traffic Evidence**
+
+**Important Features**
+
+**Model Version**
+
+**Recommended Review**
+
+
+
+**The interface will distinguish observed evidence from model-generated conclusions.**
+
+
+
+**21.19 Beginner Result View**
+
+
+
+**A beginner will receive a simplified result.**
+
+
+
+**Example:**
+
+
+
+**Security Check Complete**
+
+
+
+**Risk Level: HIGH**
+
+
+
+**The tested extension showed network behavior**
+
+**that differs from the normal baseline.**
+
+
+
+**Why?**
+
+**The system observed patterns associated with**
+
+**the suspicious behavior used in the controlled test.**
+
+
+
+**Next Step:**
+
+**Review the detailed analysis.**
+
+
+
+**Technical details can remain available through an advanced view.**
+
+
+
+**21.20 Analyst Result View**
+
+
+
+**An analyst may access additional information:**
+
+
+
+**Detection**
+
+**├── Risk**
+
+**├── Prediction**
+
+**├── Confidence**
+
+**├── Traffic Statistics**
+
+**├── Feature Information**
+
+**├── Evidence**
+
+**├── Model Version**
+
+**└── Processing Timeline**
+
+
+
+**This provides a deeper investigation experience.**
+
+
+
+**21.21 Research Dashboard**
+
+
+
+**The research interface will expose experimental information.**
+
+
+
+**Potential sections include:**
+
+
+
+**Dataset**
+
+**Model**
+
+**Experiment**
+
+**Metrics**
+
+**Classical Results**
+
+**Quantum Results**
+
+**Comparison**
+
+
+
+**Research information will remain separate from the simplified beginner experience.**
+
+
+
+**21.22 Quantum Research Visualization**
+
+
+
+**The Quantum Lab may display:**
+
+
+
+**Number of qubits.**
+
+**Circuit information.**
+
+**Quantum model.**
+
+**Evaluation metrics.**
+
+**Classical baseline.**
+
+**Quantum result.**
+
+**Comparison charts.**
+
+
+
+**The UI will clearly identify quantum results as experimental.**
+
+
+
+**21.23 Model Comparison Chart**
+
+
+
+**The system may provide comparison visualizations such as:**
+
+
+
+**Random Forest**
+
+&#x20;     **↓**
+
+**XGBoost**
+
+&#x20;     **↓**
+
+**VQC**
+
+&#x20;     **↓**
+
+**QSVM**
+
+
+
+**Metrics may include:**
+
+
+
+**Accuracy.**
+
+**Precision.**
+
+**Recall.**
+
+**F1-score.**
+
+**ROC-AUC.**
+
+
+
+**The visualization will use the same evaluation dataset and methodology for meaningful comparison.**
+
+
+
+**21.24 Traffic Flow Table**
+
+
+
+**Authorized users may view processed traffic information.**
+
+
+
+**Potential columns include:**
+
+
+
+**Time**
+
+**Source**
+
+**Destination**
+
+**Protocol**
+
+**Packets**
+
+**Bytes**
+
+**Duration**
+
+**Risk**
+
+
+
+**Sensitive information will be displayed only to users with appropriate authorization.**
+
+
+
+**21.25 Filtering**
+
+
+
+**The dashboard may support filtering by:**
+
+
+
+**Risk.**
+
+**Time.**
+
+**Test.**
+
+**Detection status.**
+
+**Protocol.**
+
+**Extension.**
+
+**User-accessible resources.**
+
+
+
+**Filtering should be performed efficiently through backend APIs when datasets become large.**
+
+
+
+**21.26 Search**
+
+
+
+**Where appropriate, the dashboard may provide search functionality.**
+
+
+
+**Search may cover:**
+
+
+
+**Test IDs.**
+
+**Detection IDs.**
+
+**Extension identifiers.**
+
+**Research experiments.**
+
+
+
+**Search inputs will be validated before being passed to backend services.**
+
+
+
+**21.27 Pagination**
+
+
+
+**Large result sets will use pagination or another controlled data-loading mechanism.**
+
+
+
+**The frontend should not attempt to load an unlimited number of records at once.**
+
+
+
+**21.28 Loading States**
+
+
+
+**The interface will provide clear loading states.**
+
+
+
+**Example:**
+
+
+
+**Loading Detection...**
+
+**Loading Traffic Data...**
+
+**Running Analysis...**
+
+**Waiting for Model...**
+
+
+
+**Users should understand whether the system is processing or has stopped responding.**
+
+
+
+**21.29 Empty States**
+
+
+
+**The interface will provide useful empty states.**
+
+
+
+**Example:**
+
+
+
+**No detections found.**
+
+
+
+**Run a controlled extension test**
+
+**to begin security analysis.**
+
+
+
+**Empty states should guide users rather than simply displaying blank screens.**
+
+
+
+**21.30 Error States**
+
+
+
+**The interface will handle failures clearly.**
+
+
+
+**Example:**
+
+
+
+**Analysis Could Not Be Completed**
+
+
+
+**The traffic-processing service was unable**
+
+**to complete this test.**
+
+
+
+**Please review the test status or retry**
+
+**the operation if permitted.**
+
+
+
+**Sensitive internal error information will not be exposed unnecessarily.**
+
+
+
+**21.31 Real-Time Updates**
+
+
+
+**The frontend may receive real-time events from the backend.**
+
+
+
+**Potential updates include:**
+
+
+
+**Test Started**
+
+**Capture Started**
+
+**Processing Started**
+
+**Features Ready**
+
+**Detection Generated**
+
+**Risk Updated**
+
+**Test Completed**
+
+**Alert Generated**
+
+
+
+**The exact communication mechanism will be finalized during implementation.**
+
+
+
+**21.32 Notifications**
+
+
+
+**The dashboard may provide in-application notifications.**
+
+
+
+**Examples include:**
+
+
+
+**Test completed.**
+
+**Detection generated.**
+
+**Alert generated.**
+
+**Processing failed.**
+
+**Model unavailable.**
+
+
+
+**Notifications should not expose sensitive information to unauthorized users.**
+
+
+
+**21.33 Alert Dashboard**
+
+
+
+**The alert section may display:**
+
+
+
+**Alert Status**
+
+**Severity**
+
+**Detection**
+
+**Created Time**
+
+**Delivery Status**
+
+**Resolution Status**
+
+
+
+**Telegram delivery will be handled through the backend/n8n architecture rather than directly from the frontend.**
+
+
+
+**21.34 AI Explanation Panel**
+
+
+
+**The detection page may include an AI explanation panel.**
+
+
+
+**Conceptually:**
+
+
+
+**Detection Result**
+
+&#x20;     **↓**
+
+**Evidence**
+
+&#x20;     **↓**
+
+**AI Security Assistant**
+
+&#x20;     **↓**
+
+**Explanation**
+
+
+
+**The AI explanation will be based on structured application data.**
+
+
+
+**21.35 AI Explanation Safety**
+
+
+
+**The frontend will clearly distinguish AI-generated explanations from authoritative security results.**
+
+
+
+**Example:**
+
+
+
+**System Detection:**
+
+**HIGH RISK**
+
+
+
+**AI Explanation:**
+
+**The system observed unusual behavior...**
+
+
+
+**The AI assistant must not appear to be the component that generated the authoritative detection unless that is actually the architecture.**
+
+
+
+**21.36 Responsive Design**
+
+
+
+**The frontend will support appropriate desktop and smaller-screen layouts where practical.**
+
+
+
+**The main dashboard should remain usable across supported screen sizes.**
+
+
+
+**21.37 Accessibility**
+
+
+
+**The frontend will consider accessibility requirements.**
+
+
+
+**Important considerations include:**
+
+
+
+**Keyboard navigation.**
+
+**Text labels.**
+
+**Sufficient visual contrast.**
+
+**Accessible form controls.**
+
+**Screen-reader-friendly structure.**
+
+**Non-color indicators.**
+
+**Clear error messages.**
+
+
+
+**Security information should not be communicated through color alone.**
+
+
+
+**21.38 Visual Design System**
+
+
+
+**The application will use a consistent visual language.**
+
+
+
+**The design system may define:**
+
+
+
+**Typography**
+
+**Spacing**
+
+**Buttons**
+
+**Cards**
+
+**Tables**
+
+**Forms**
+
+**Status Indicators**
+
+**Charts**
+
+**Navigation**
+
+**Alerts**
+
+**Modals**
+
+
+
+**Tailwind CSS will be used to maintain consistency across the application.**
+
+
+
+**21.39 Security Color Semantics**
+
+
+
+**The interface may use visual severity levels such as:**
+
+
+
+**Low Risk**
+
+**Medium Risk**
+
+**High Risk**
+
+**Critical / Immediate Review**
+
+
+
+**However, each severity will also contain text or another accessible indicator.**
+
+
+
+**21.40 Navigation**
+
+
+
+**The primary navigation may include:**
+
+
+
+**Dashboard**
+
+**Tests**
+
+**Detections**
+
+**Traffic**
+
+**Research**
+
+**Alerts**
+
+**AI Assistant**
+
+**Settings**
+
+
+
+**Only authorized sections will be shown or accessible to each role.**
+
+
+
+**21.41 User Profile**
+
+
+
+**The frontend may provide a user profile area containing:**
+
+
+
+**Display information.**
+
+**Role.**
+
+**Account settings.**
+
+**Session controls.**
+
+
+
+**Sensitive account information will be handled carefully.**
+
+
+
+**21.42 Session Management**
+
+
+
+**The frontend will provide appropriate session behavior.**
+
+
+
+**Possible functionality includes:**
+
+
+
+**Login.**
+
+**Logout.**
+
+**Session expiration handling.**
+
+**Re-authentication where required.**
+
+
+
+**Expired authentication should redirect the user safely to the authentication flow.**
+
+
+
+**21.43 Frontend Security**
+
+
+
+**The frontend will follow secure development practices.**
+
+
+
+**Important areas include:**
+
+
+
+**Input validation.**
+
+**Output encoding.**
+
+**Safe rendering.**
+
+**Secure authentication handling.**
+
+**Avoiding unnecessary sensitive data storage.**
+
+**Dependency management.**
+
+**Secure API communication.**
+
+**Protection against common client-side vulnerabilities.**
+
+**21.44 XSS Protection**
+
+
+
+**User-controlled or backend-provided content will not be inserted into the page using unsafe HTML rendering without appropriate sanitization and justification.**
+
+
+
+**The frontend will prefer safe React rendering patterns.**
+
+
+
+**21.45 API Error Handling**
+
+
+
+**The frontend will translate backend errors into understandable messages.**
+
+
+
+**The architecture is:**
+
+
+
+**Backend Error**
+
+&#x20;     **↓**
+
+**API Client**
+
+&#x20;     **↓**
+
+**Error Classification**
+
+&#x20;     **↓**
+
+**User-Friendly Message**
+
+
+
+**Internal stack traces will not be shown to normal users.**
+
+
+
+**21.46 API Loading Architecture**
+
+
+
+**API calls will be organized through a dedicated service layer.**
+
+
+
+**The conceptual structure is:**
+
+
+
+**React Component**
+
+&#x20;     **↓**
+
+**Frontend API Service**
+
+&#x20;     **↓**
+
+**HTTP Request**
+
+&#x20;     **↓**
+
+**FastAPI**
+
+
+
+**This avoids placing large amounts of networking logic directly inside UI components.**
+
+
+
+**21.47 Frontend State Management**
+
+
+
+**Application state will be separated into logical categories.**
+
+
+
+**Possible state areas include:**
+
+
+
+**Authentication State**
+
+**User State**
+
+**Test State**
+
+**Detection State**
+
+**Dashboard State**
+
+**Research State**
+
+**Alert State**
+
+**AI Assistant State**
+
+
+
+**The exact state-management library, if any, will be selected during implementation.**
+
+
+
+**21.48 Dashboard Performance**
+
+
+
+**The frontend will avoid unnecessary processing of large traffic datasets.**
+
+
+
+**Possible techniques include:**
+
+
+
+**Pagination.**
+
+**Lazy loading.**
+
+**Data aggregation.**
+
+**Memoization where useful.**
+
+**Controlled chart updates.**
+
+**Efficient API queries.**
+
+
+
+**Performance will be evaluated after the core functionality works.**
+
+
+
+**21.49 Security Dashboard Workflow**
+
+
+
+**The main workflow is:**
+
+
+
+**Login**
+
+&#x20;**↓**
+
+**Dashboard**
+
+&#x20;**↓**
+
+**Start Controlled Test**
+
+&#x20;**↓**
+
+**Monitor Test**
+
+&#x20;**↓**
+
+**Traffic Analysis**
+
+&#x20;**↓**
+
+**ML Detection**
+
+&#x20;**↓**
+
+**Risk Result**
+
+&#x20;**↓**
+
+**Review Evidence**
+
+&#x20;**↓**
+
+**AI Explanation**
+
+&#x20;**↓**
+
+**Alert if Required**
+
+&#x20;**↓**
+
+**Resolve / Review**
+
+**21.50 Beginner Workflow**
+
+
+
+**The beginner experience is:**
+
+
+
+**Login**
+
+&#x20;**↓**
+
+**AI Welcome**
+
+&#x20;**↓**
+
+**Guided Test**
+
+&#x20;**↓**
+
+**Run Test**
+
+&#x20;**↓**
+
+**Wait for Analysis**
+
+&#x20;**↓**
+
+**Simple Risk Result**
+
+&#x20;**↓**
+
+**Understand Explanation**
+
+**21.51 Analyst Workflow**
+
+
+
+**The analyst experience is:**
+
+
+
+**Login**
+
+&#x20;**↓**
+
+**Security Dashboard**
+
+&#x20;**↓**
+
+**Select Test**
+
+&#x20;**↓**
+
+**Inspect Traffic**
+
+&#x20;**↓**
+
+**Review Detection**
+
+&#x20;**↓**
+
+**Inspect Evidence**
+
+&#x20;**↓**
+
+**Review Model Information**
+
+&#x20;**↓**
+
+**Investigate**
+
+**21.52 Researcher Workflow**
+
+
+
+**The researcher experience is:**
+
+
+
+**Login**
+
+&#x20;**↓**
+
+**Research Dashboard**
+
+&#x20;**↓**
+
+**Select Dataset**
+
+&#x20;**↓**
+
+**Select Experiment**
+
+&#x20;**↓**
+
+**Run / Review Model**
+
+&#x20;**↓**
+
+**Compare Classical and Quantum Results**
+
+&#x20;**↓**
+
+**Analyze Metrics**
+
+&#x20;**↓**
+
+**Export Research Findings**
+
+**21.53 Administrator Workflow**
+
+
+
+**The administrator experience may include:**
+
+
+
+**Login**
+
+&#x20;**↓**
+
+**Admin Dashboard**
+
+&#x20;**↓**
+
+**Users / Roles**
+
+&#x20;**↓**
+
+**System Configuration**
+
+&#x20;**↓**
+
+**Model Management**
+
+&#x20;**↓**
+
+**Audit Logs**
+
+&#x20;**↓**
+
+**Operational Monitoring**
+
+**21.54 Frontend-to-Backend Security Boundary**
+
+
+
+**The frontend is considered an untrusted client.**
+
+
+
+**Therefore:**
+
+
+
+**Frontend**
+
+&#x20;  **↓**
+
+**Request**
+
+&#x20;  **↓**
+
+**Backend Validation**
+
+&#x20;  **↓**
+
+**Authorization**
+
+&#x20;  **↓**
+
+**Application Logic**
+
+
+
+**The backend will always enforce security-sensitive decisions.**
+
+
+
+**21.55 Frontend Deployment**
+
+
+
+**The frontend will eventually be deployed as a production web application.**
+
+
+
+**The conceptual architecture is:**
+
+
+
+**User Browser**
+
+&#x20;     **↓**
+
+**HTTPS**
+
+&#x20;     **↓**
+
+**React Frontend**
+
+&#x20;     **↓**
+
+**FastAPI Backend**
+
+
+
+**The production deployment configuration will be defined after local development and integration testing.**
+
+
+
+**21.56 Frontend Environment Configuration**
+
+
+
+**Frontend configuration will use environment variables for appropriate non-secret configuration.**
+
+
+
+**Public frontend configuration will be clearly distinguished from backend secrets.**
+
+
+
+**Private API keys and privileged credentials must never be bundled into the browser application.**
+
+
+
+**21.57 Frontend Testing**
+
+
+
+**The frontend will be tested for:**
+
+
+
+**Component behavior.**
+
+**Routing.**
+
+**Authentication flows.**
+
+**Role-based UI.**
+
+**API integration.**
+
+**Loading states.**
+
+**Error states.**
+
+**Accessibility.**
+
+**Responsive behavior.**
+
+**Security-related UI behavior.**
+
+**21.58 Frontend Security Testing**
+
+
+
+**Security testing will consider:**
+
+
+
+**XSS.**
+
+**Authentication-state handling.**
+
+**Authorization assumptions.**
+
+**Unsafe rendering.**
+
+**Sensitive data exposure.**
+
+**Dependency vulnerabilities.**
+
+**Improper API usage.**
+
+
+
+**The backend will remain the authoritative security boundary.**
+
+
+
+**21.59 Dashboard Goal**
+
+
+
+**The goal of the Security Dashboard and Frontend subsystem is to transform the complex Extension AI Guard detection pipeline into an understandable, secure, and professional user experience.**
+
+
+
+**The complete frontend workflow is:**
+
+
+
+**User**
+
+&#x20;**↓**
+
+**React Application**
+
+&#x20;**↓**
+
+**Authentication**
+
+&#x20;**↓**
+
+**Role-Based Experience**
+
+&#x20;**↓**
+
+**Dashboard**
+
+&#x20;**↓**
+
+**Controlled Test**
+
+&#x20;**↓**
+
+**Real-Time Analysis**
+
+&#x20;**↓**
+
+**Detection Result**
+
+&#x20;**↓**
+
+**Traffic Evidence**
+
+&#x20;**↓**
+
+**AI Explanation**
+
+&#x20;**↓**
+
+**Alert / Review**
+
+
+
+**The dashboard therefore becomes the primary visual interface connecting the project's security technology with its users.**
+
+
+
+**## 22. n8n, Telegram Alerting and Production Deployment Architecture**
+
+
+
+**The n8n, Telegram Alerting and Production Deployment subsystem provides the final operational layer of Extension AI Guard.**
+
+
+
+**It connects validated security detections to automated notifications and defines how the complete application can move from local development to a production deployment.**
+
+
+
+**The architecture is designed so that detection, alert generation, automation, notification delivery, monitoring, and deployment remain separate responsibilities.**
+
+
+
+**### 22.1 Alerting Objective**
+
+
+
+**The alerting subsystem will notify authorized users when a detection satisfies a configured alert policy.**
+
+
+
+**The primary workflow is:**
+
+
+
+**```text**
+
+**Network Activity**
+
+&#x20;     **↓**
+
+**Traffic Analysis**
+
+&#x20;     **↓**
+
+**ML Detection**
+
+&#x20;     **↓**
+
+**Risk Classification**
+
+&#x20;     **↓**
+
+**Alert Policy**
+
+&#x20;     **↓**
+
+**n8n Workflow**
+
+&#x20;     **↓**
+
+**Telegram Notification**
+
+**22.2 Alerting Architecture**
+
+
+
+**The high-level architecture is:**
+
+
+
+&#x20;                   **Detection Engine**
+
+&#x20;                          **↓**
+
+&#x20;                      **FastAPI**
+
+&#x20;                          **↓**
+
+&#x20;                    **Alert Policy**
+
+&#x20;                          **↓**
+
+&#x20;                   **n8n Webhook/API**
+
+&#x20;                          **↓**
+
+&#x20;                   **n8n Workflow**
+
+&#x20;                          **↓**
+
+&#x20;                    **Telegram Bot**
+
+&#x20;                          **↓**
+
+&#x20;                 **Authorized Recipient**
+
+
+
+**The frontend will not directly communicate with Telegram.**
+
+
+
+**22.3 Alert Generation**
+
+
+
+**An alert will be generated only when a detection satisfies the configured alert conditions.**
+
+
+
+**Conceptually:**
+
+
+
+**Detection**
+
+&#x20;   **↓**
+
+**Risk Level**
+
+&#x20;   **↓**
+
+**Alert Rules**
+
+&#x20;   **↓**
+
+**Condition Satisfied?**
+
+&#x20;   **├── NO → Store Detection**
+
+&#x20;   **└── YES**
+
+&#x20;         **↓**
+
+&#x20;     **Create Alert**
+
+&#x20;         **↓**
+
+&#x20;     **Send to n8n**
+
+**22.4 Alert Severity**
+
+
+
+**The system may classify alerts using levels such as:**
+
+
+
+**LOW**
+
+**MEDIUM**
+
+**HIGH**
+
+**CRITICAL**
+
+
+
+**The exact thresholds will be determined from the detection and risk-classification design.**
+
+
+
+**Severity must be based on documented rules rather than visual preference.**
+
+
+
+**22.5 Alert Policy**
+
+
+
+**The alert policy determines whether a detection requires notification.**
+
+
+
+**Possible factors include:**
+
+
+
+**Risk level.**
+
+**Detection type.**
+
+**Confidence or probability.**
+
+**Repeated behavior.**
+
+**Test profile.**
+
+**User-defined policy.**
+
+**Alert suppression rules.**
+
+
+
+**The policy will be evaluated by the backend before automation is triggered.**
+
+
+
+**22.6 Alert Record**
+
+
+
+**An alert record may contain:**
+
+
+
+**Alert ID**
+
+**Detection ID**
+
+**Test ID**
+
+**Severity**
+
+**Alert Type**
+
+**Created Time**
+
+**Delivery Status**
+
+**Workflow Reference**
+
+**Resolution Status**
+
+
+
+**The final database structure will be defined during implementation.**
+
+
+
+**22.7 Alert Deduplication**
+
+
+
+**Repeated detections may result in duplicate notifications.**
+
+
+
+**The alerting subsystem will therefore support deduplication or suppression logic where appropriate.**
+
+
+
+**Conceptually:**
+
+
+
+**Detection**
+
+&#x20;   **↓**
+
+**Existing Similar Alert?**
+
+&#x20;  **/                 \\**
+
+&#x20;**YES                  NO**
+
+&#x20;**↓                     ↓**
+
+**Suppress / Group     Create Alert**
+
+&#x20;                        **↓**
+
+&#x20;                    **Notify**
+
+
+
+**This prevents notification flooding.**
+
+
+
+**22.8 Alert Suppression**
+
+
+
+**Authorized alert policies may temporarily suppress repeated alerts for the same event or detection category.**
+
+
+
+**Suppression rules will be carefully scoped so that important security events are not hidden accidentally.**
+
+
+
+**22.9 n8n Integration**
+
+
+
+**n8n will provide the workflow automation layer.**
+
+
+
+**The conceptual workflow is:**
+
+
+
+**FastAPI**
+
+&#x20;  **↓**
+
+**Webhook / Event**
+
+&#x20;  **↓**
+
+**n8n**
+
+&#x20;  **↓**
+
+**Validate Event**
+
+&#x20;  **↓**
+
+**Format Message**
+
+&#x20;  **↓**
+
+**Telegram**
+
+
+
+**The final integration method will be selected during implementation.**
+
+
+
+**22.10 n8n Workflow**
+
+
+
+**The primary workflow may contain:**
+
+
+
+**Trigger**
+
+&#x20;  **↓**
+
+**Receive Detection**
+
+&#x20;  **↓**
+
+**Validate Payload**
+
+&#x20;  **↓**
+
+**Check Severity**
+
+&#x20;  **↓**
+
+**Format Notification**
+
+&#x20;  **↓**
+
+**Send Telegram Message**
+
+&#x20;  **↓**
+
+**Record Delivery Result**
+
+**22.11 n8n Validation**
+
+
+
+**The workflow must validate incoming information before sending a notification.**
+
+
+
+**Validation may include:**
+
+
+
+**Required alert identifier.**
+
+**Detection identifier.**
+
+**Severity.**
+
+**Message content.**
+
+**Timestamp.**
+
+**Authorized workflow source.**
+
+
+
+**Untrusted fields should not be blindly executed as workflow commands.**
+
+
+
+**22.12 Telegram Integration**
+
+
+
+**Telegram will be used as a notification channel.**
+
+
+
+**The Telegram integration will use a bot-based communication model.**
+
+
+
+**The conceptual architecture is:**
+
+
+
+**Extension AI Guard**
+
+&#x20;      **↓**
+
+**n8n**
+
+&#x20;      **↓**
+
+**Telegram Bot**
+
+&#x20;      **↓**
+
+**Authorized Chat**
+
+
+
+**Telegram credentials will remain outside frontend source code.**
+
+
+
+**22.13 Telegram Notification**
+
+
+
+**A notification may contain:**
+
+
+
+**Extension AI Guard Alert**
+
+
+
+**Severity: HIGH**
+
+**Detection: Suspicious Network Behavior**
+
+**Test: TEST-XXXX**
+
+**Time: YYYY-MM-DD HH:MM**
+
+
+
+**Review the security dashboard**
+
+**for detailed evidence.**
+
+
+
+**The final message format will be implemented after the alert workflow is operational.**
+
+
+
+**22.14 Sensitive Information in Alerts**
+
+
+
+**Notifications should contain only the information necessary for rapid awareness.**
+
+
+
+**Highly sensitive traffic data should not automatically be placed into Telegram messages.**
+
+
+
+**The dashboard should remain the primary location for detailed investigation.**
+
+
+
+**22.15 Alert Delivery Status**
+
+
+
+**The system should track delivery status.**
+
+
+
+**Possible states include:**
+
+
+
+**PENDING**
+
+**SENT**
+
+**FAILED**
+
+**RETRYING**
+
+
+
+**This allows operators to distinguish detection failure from notification failure.**
+
+
+
+**22.16 Alert Retry**
+
+
+
+**Temporary notification failures may be retried.**
+
+
+
+**The conceptual flow is:**
+
+
+
+**Send Notification**
+
+&#x20;      **↓**
+
+**Success?**
+
+&#x20;  **/          \\**
+
+&#x20;**YES           NO**
+
+&#x20;**↓              ↓**
+
+**Delivered     Retry**
+
+&#x20;               **↓**
+
+&#x20;         **Retry Limit?**
+
+&#x20;           **/      \\**
+
+&#x20;         **NO        YES**
+
+&#x20;         **↓          ↓**
+
+&#x20;      **Retry       Failed**
+
+
+
+**The retry policy will be configured during implementation.**
+
+
+
+**22.17 Alert Failure Isolation**
+
+
+
+**A Telegram or n8n failure must not invalidate the underlying security detection.**
+
+
+
+**The architecture is:**
+
+
+
+**ML Detection**
+
+&#x20;    **↓**
+
+**Database**
+
+&#x20;    **↓**
+
+**Alerting**
+
+&#x20;    **↓**
+
+**Failure**
+
+
+
+**Even if notification delivery fails, the detection remains stored and visible in the dashboard.**
+
+
+
+**22.18 Alert Audit Trail**
+
+
+
+**Important alert events will be logged.**
+
+
+
+**Potential events include:**
+
+
+
+**Alert created.**
+
+**Alert sent.**
+
+**Alert failed.**
+
+**Alert retried.**
+
+**Alert resolved.**
+
+**Alert suppressed.**
+
+
+
+**This provides traceability.**
+
+
+
+**22.19 Alert Resolution**
+
+
+
+**Authorized users may mark alerts as reviewed or resolved.**
+
+
+
+**Conceptually:**
+
+
+
+**Alert**
+
+&#x20;**↓**
+
+**Investigation**
+
+&#x20;**↓**
+
+**Reviewed**
+
+&#x20;**↓**
+
+**Resolved**
+
+
+
+**The exact workflow will be implemented through the backend.**
+
+
+
+**22.20 Automation Security**
+
+
+
+**n8n will be treated as a privileged automation component.**
+
+
+
+**Security controls include:**
+
+
+
+**Protected n8n access.**
+
+**Strong authentication.**
+
+**Restricted workflows.**
+
+**Secure credentials.**
+
+**Validated webhook input.**
+
+**Minimal permissions.**
+
+**No arbitrary command execution from untrusted input.**
+
+**22.21 Telegram Credential Security**
+
+
+
+**Telegram bot credentials must never be:**
+
+
+
+**Hard-coded in source code.**
+
+**Committed to GitHub.**
+
+**Included in frontend JavaScript.**
+
+**Printed in logs.**
+
+**Exposed through API responses.**
+
+
+
+**They will be stored through secure environment configuration or deployment secrets.**
+
+
+
+**22.22 Production Environment**
+
+
+
+**The production architecture will separate the major services.**
+
+
+
+**Conceptually:**
+
+
+
+&#x20;                        **Internet**
+
+&#x20;                           **↓**
+
+&#x20;                    **HTTPS / TLS**
+
+&#x20;                           **↓**
+
+&#x20;                   **Frontend Application**
+
+&#x20;                           **↓**
+
+&#x20;                     **FastAPI Backend**
+
+&#x20;                           **↓**
+
+&#x20;         **┌─────────────────┼─────────────────┐**
+
+&#x20;         **↓                 ↓                 ↓**
+
+&#x20;     **Supabase          ML Inference      Traffic Services**
+
+&#x20;         **↓                 ↓                 ↓**
+
+&#x20;      **Database        Model Runtime       Processing**
+
+&#x20;                           **↓**
+
+&#x20;                      **Detection**
+
+&#x20;                           **↓**
+
+&#x20;                    **Alert Policy**
+
+&#x20;                           **↓**
+
+&#x20;                          **n8n**
+
+&#x20;                           **↓**
+
+&#x20;                        **Telegram**
+
+**22.23 Production Components**
+
+
+
+**The production environment may contain:**
+
+
+
+**Frontend**
+
+**Backend API**
+
+**Database**
+
+**ML Inference Service**
+
+**Traffic Processing Service**
+
+**n8n Automation**
+
+**Monitoring**
+
+**Logging**
+
+**Model Storage**
+
+
+
+**The exact hosting providers will be selected after local validation.**
+
+
+
+**22.24 Development Environment**
+
+
+
+**Development will initially remain local.**
+
+
+
+**Conceptually:**
+
+
+
+**Windows Development Machine**
+
+&#x20;       **↓**
+
+**Git Repository**
+
+&#x20;       **↓**
+
+**Python Virtual Environment**
+
+&#x20;       **↓**
+
+**React Development Server**
+
+&#x20;       **↓**
+
+**FastAPI Development Server**
+
+&#x20;       **↓**
+
+**Traffic Lab**
+
+&#x20;       **↓**
+
+**ML / Quantum Research**
+
+**22.25 Development-to-Production Flow**
+
+
+
+**The project will follow:**
+
+
+
+**Development**
+
+&#x20;    **↓**
+
+**Local Testing**
+
+&#x20;    **↓**
+
+**Integration Testing**
+
+&#x20;    **↓**
+
+**Security Testing**
+
+&#x20;    **↓**
+
+**Production Candidate**
+
+&#x20;    **↓**
+
+**Deployment**
+
+&#x20;    **↓**
+
+**Production Monitoring**
+
+
+
+**No component should be deployed directly to production without appropriate testing.**
+
+
+
+**22.26 GitHub Repository**
+
+
+
+**GitHub will act as the central source-control repository.**
+
+
+
+**The project repository will contain:**
+
+
+
+**Extension-AI-Guard/**
+
+**│**
+
+**├── frontend/**
+
+**├── backend/**
+
+**├── extension/**
+
+**├── traffic/**
+
+**├── ml/**
+
+**├── quantum/**
+
+**├── automation/**
+
+**├── tests/**
+
+**├── docs/**
+
+**├── models/**
+
+**├── data/**
+
+**│**
+
+**├── README.md**
+
+**├── .gitignore**
+
+**├── .env.example**
+
+**└── requirements.txt**
+
+
+
+**Generated secrets and unnecessary local files will remain excluded.**
+
+
+
+**22.27 Git Branching**
+
+
+
+**The project may use branches for controlled development.**
+
+
+
+**Conceptually:**
+
+
+
+**master**
+
+&#x20; **│**
+
+&#x20; **├── development**
+
+&#x20; **│**
+
+&#x20; **├── feature/backend**
+
+&#x20; **├── feature/frontend**
+
+&#x20; **├── feature/ml**
+
+&#x20; **├── feature/extension**
+
+&#x20; **└── feature/quantum**
+
+
+
+**The exact branching strategy will be kept simple enough for the project team to maintain.**
+
+
+
+**22.28 Commit Strategy**
+
+
+
+**Git commits will represent meaningful project milestones.**
+
+
+
+**Examples:**
+
+
+
+**Initial project foundation**
+
+**Add architecture documentation**
+
+**Implement authentication**
+
+**Add extension laboratory**
+
+**Implement traffic capture**
+
+**Add feature engineering**
+
+**Train baseline ML models**
+
+**Add quantum experiment**
+
+**Implement real-time inference**
+
+**Add dashboard**
+
+**Add alerting**
+
+**Prepare production deployment**
+
+
+
+**Commit messages should clearly describe the completed change.**
+
+
+
+**22.29 .gitignore Protection**
+
+
+
+**The repository will exclude files such as:**
+
+
+
+**.env**
+
+**.venv/**
+
+**\_\_pycache\_\_/**
+
+**\*.pyc**
+
+**node\_modules/**
+
+**\*.log**
+
+**temporary PCAP files**
+
+**local datasets where appropriate**
+
+**local model artifacts where appropriate**
+
+
+
+**The final .gitignore will be reviewed before production deployment.**
+
+
+
+**22.30 Environment Separation**
+
+
+
+**The project will maintain separate configurations for:**
+
+
+
+**Development**
+
+**Testing**
+
+**Production**
+
+
+
+**Production secrets must never be copied into public development files.**
+
+
+
+**22.31 Secret Management**
+
+
+
+**Production secrets may include:**
+
+
+
+**Database Credentials**
+
+**Authentication Secrets**
+
+**AI API Keys**
+
+**Telegram Bot Token**
+
+**n8n Credentials**
+
+**Deployment Credentials**
+
+
+
+**Secrets will be managed through the selected deployment platform's secret-management system where available.**
+
+
+
+**22.32 CI/CD Architecture**
+
+
+
+**The project may use GitHub-based CI/CD for automated validation.**
+
+
+
+**The conceptual pipeline is:**
+
+
+
+**Git Push**
+
+&#x20;  **↓**
+
+**Automated Checks**
+
+&#x20;  **↓**
+
+**Tests**
+
+&#x20;  **↓**
+
+**Linting**
+
+&#x20;  **↓**
+
+**Security Checks**
+
+&#x20;  **↓**
+
+**Build**
+
+&#x20;  **↓**
+
+**Deployment Candidate**
+
+
+
+**Automatic production deployment will only be enabled after the deployment process has been validated.**
+
+
+
+**22.33 Automated Testing**
+
+
+
+**CI may execute:**
+
+
+
+**Unit tests.**
+
+**Integration tests.**
+
+**API tests.**
+
+**Frontend tests.**
+
+**ML pipeline tests.**
+
+**Security tests.**
+
+**Configuration checks.**
+
+
+
+**Failed checks should prevent an unsuitable build from progressing.**
+
+
+
+**22.34 Dependency Security**
+
+
+
+**Dependencies will be reviewed periodically.**
+
+
+
+**The project will monitor:**
+
+
+
+**Python packages.**
+
+**Node packages.**
+
+**Frontend dependencies.**
+
+**Container dependencies if used.**
+
+**Deployment dependencies.**
+
+
+
+**Unused dependencies should be removed.**
+
+
+
+**22.35 Containerization**
+
+
+
+**Containerization may be introduced if it improves deployment consistency.**
+
+
+
+**Potential services include:**
+
+
+
+**Frontend Container**
+
+**Backend Container**
+
+**ML Service Container**
+
+**Traffic Processing Container**
+
+**n8n Container**
+
+
+
+**Containerization will not be introduced solely for complexity or appearance.**
+
+
+
+**22.36 Production TLS**
+
+
+
+**Production services handling sensitive communication will use TLS.**
+
+
+
+**The architecture is:**
+
+
+
+**Browser**
+
+&#x20;  **↓**
+
+**HTTPS**
+
+&#x20;  **↓**
+
+**Frontend**
+
+&#x20;  **↓**
+
+**HTTPS / Secure Internal Communication**
+
+&#x20;  **↓**
+
+**Backend**
+
+
+
+**Certificates and TLS configuration will be managed through the deployment environment.**
+
+
+
+**22.37 Production Database**
+
+
+
+**Supabase/PostgreSQL will provide the production database layer if selected for deployment.**
+
+
+
+**Production database access will be restricted.**
+
+
+
+**The application will use controlled credentials and appropriate database policies.**
+
+
+
+**22.38 Production Model Storage**
+
+
+
+**Production model artifacts will be versioned and controlled.**
+
+
+
+**The model lifecycle is:**
+
+
+
+**Research Model**
+
+&#x20;     **↓**
+
+**Evaluation**
+
+&#x20;     **↓**
+
+**Validation**
+
+&#x20;     **↓**
+
+**Approval**
+
+&#x20;     **↓**
+
+**Production Model**
+
+&#x20;     **↓**
+
+**Versioned Storage**
+
+&#x20;     **↓**
+
+**Inference Service**
+
+**22.39 Model Integrity**
+
+
+
+**Before loading a production model, the inference service should verify that the model artifact is compatible with the expected configuration.**
+
+
+
+**Potential checks include:**
+
+
+
+**Model version.**
+
+**Feature version.**
+
+**Preprocessing version.**
+
+**File integrity.**
+
+**Runtime compatibility.**
+
+**22.40 Production Monitoring**
+
+
+
+**Production monitoring will observe:**
+
+
+
+**Frontend Availability**
+
+**Backend Availability**
+
+**Database Availability**
+
+**ML Service Availability**
+
+**Traffic Processing**
+
+**API Latency**
+
+**Error Rate**
+
+**Detection Volume**
+
+**Alert Delivery**
+
+**Resource Usage**
+
+
+
+**Monitoring will help identify operational problems.**
+
+
+
+**22.41 Health Monitoring**
+
+
+
+**The system may expose internal health checks for:**
+
+
+
+**Frontend**
+
+**Backend**
+
+**Database**
+
+**ML Service**
+
+**Traffic Processor**
+
+**Automation**
+
+
+
+**Sensitive infrastructure information will not be unnecessarily exposed publicly.**
+
+
+
+**22.42 Logging Architecture**
+
+
+
+**Production logging will be separated by responsibility.**
+
+
+
+**Potential categories include:**
+
+
+
+**Application Logs**
+
+**API Logs**
+
+**Security Logs**
+
+**Detection Logs**
+
+**Audit Logs**
+
+**Automation Logs**
+
+
+
+**Logs will be retained according to the project's operational requirements.**
+
+
+
+**22.43 Log Security**
+
+
+
+**Logs must not unnecessarily contain:**
+
+
+
+**Passwords.**
+
+**Authentication tokens.**
+
+**API keys.**
+
+**Telegram bot tokens.**
+
+**Database credentials.**
+
+**Sensitive personal information.**
+
+
+
+**Sensitive values should be redacted where necessary.**
+
+
+
+**22.44 Backup Architecture**
+
+
+
+**Important application data will have a backup strategy.**
+
+
+
+**Potential backup targets include:**
+
+
+
+**Database**
+
+**Configuration**
+
+**Model Metadata**
+
+**Experiment Metadata**
+
+**Important Reports**
+
+
+
+**Raw traffic captures will use a separate retention strategy because of their potentially large size and sensitive nature.**
+
+
+
+**22.45 Recovery Architecture**
+
+
+
+**The recovery process is:**
+
+
+
+**Failure**
+
+&#x20; **↓**
+
+**Detection**
+
+&#x20; **↓**
+
+**Incident Review**
+
+&#x20; **↓**
+
+**Restore Required Component**
+
+&#x20; **↓**
+
+**Validate**
+
+&#x20; **↓**
+
+**Resume Service**
+
+
+
+**Recovery procedures will be documented after the production environment is established.**
+
+
+
+**22.46 Data Retention**
+
+
+
+**The project will define retention periods for:**
+
+
+
+**Test sessions.**
+
+**Detection records.**
+
+**Alerts.**
+
+**Audit logs.**
+
+**PCAP files.**
+
+**Processed traffic.**
+
+**Research experiments.**
+
+
+
+**Retention will consider storage requirements and security needs.**
+
+
+
+**22.47 PCAP Protection**
+
+
+
+**PCAP files may contain sensitive network information.**
+
+
+
+**Therefore:**
+
+
+
+**PCAP**
+
+&#x20;**↓**
+
+**Restricted Storage**
+
+&#x20;**↓**
+
+**Authorized Processing**
+
+&#x20;**↓**
+
+**Feature Extraction**
+
+&#x20;**↓**
+
+**Controlled Retention / Deletion**
+
+
+
+**PCAP files will not automatically be made publicly accessible.**
+
+
+
+**22.48 Production Access Control**
+
+
+
+**Production infrastructure access will be restricted.**
+
+
+
+**Administrative access should use:**
+
+
+
+**Strong authentication.**
+
+**Least privilege.**
+
+**Restricted accounts.**
+
+**Secure credentials.**
+
+**Audit logging.**
+
+**22.49 Incident Response**
+
+
+
+**If the production system itself is compromised, the project should support an incident-response process.**
+
+
+
+**Conceptually:**
+
+
+
+**Security Event**
+
+&#x20;     **↓**
+
+**Detect**
+
+&#x20;     **↓**
+
+**Contain**
+
+&#x20;     **↓**
+
+**Investigate**
+
+&#x20;     **↓**
+
+**Recover**
+
+&#x20;     **↓**
+
+**Review**
+
+&#x20;     **↓**
+
+**Improve**
+
+
+
+**This is separate from the browser-extension detection workflow.**
+
+
+
+**22.50 Disaster Recovery**
+
+
+
+**The project will document how to recover:**
+
+
+
+**Application**
+
+**Database**
+
+**Models**
+
+**Configuration**
+
+**Automation**
+
+
+
+**Recovery testing should be performed before considering the deployment production-ready.**
+
+
+
+**22.51 Deployment Validation**
+
+
+
+**Before production release:**
+
+
+
+**Code**
+
+&#x20;**↓**
+
+**Tests**
+
+&#x20;**↓**
+
+**Security Review**
+
+&#x20;**↓**
+
+**Configuration Review**
+
+&#x20;**↓**
+
+**Dependency Review**
+
+&#x20;**↓**
+
+**Deployment**
+
+&#x20;**↓**
+
+**Health Checks**
+
+&#x20;**↓**
+
+**Smoke Tests**
+
+&#x20;**↓**
+
+**Production Ready**
+
+**22.52 Production Rollback**
+
+
+
+**If a deployment introduces a serious problem:**
+
+
+
+**New Deployment**
+
+&#x20;     **↓**
+
+**Problem Detected**
+
+&#x20;     **↓**
+
+**Stop / Review**
+
+&#x20;     **↓**
+
+**Previous Stable Version**
+
+&#x20;     **↓**
+
+**Rollback**
+
+&#x20;     **↓**
+
+**Health Check**
+
+
+
+**The same principle applies to backend, frontend, and model versions.**
+
+
+
+**22.53 Alerting Rollback**
+
+
+
+**If an n8n workflow or Telegram configuration causes excessive notifications, the alert workflow can be disabled or reverted without disabling the core detection engine.**
+
+
+
+**This maintains separation between:**
+
+
+
+**Detection**
+
+
+
+**and:**
+
+
+
+**Notification**
+
+**22.54 Production Security Checklist**
+
+
+
+**Before production deployment, the project should verify:**
+
+
+
+**\[ ] Authentication enabled**
+
+**\[ ] Authorization enforced**
+
+**\[ ] HTTPS enabled**
+
+**\[ ] Secrets protected**
+
+**\[ ] .env excluded from Git**
+
+**\[ ] Database policies configured**
+
+**\[ ] API validation enabled**
+
+**\[ ] Rate limiting reviewed**
+
+**\[ ] Logging configured**
+
+**\[ ] Audit logging configured**
+
+**\[ ] Model versioning enabled**
+
+**\[ ] PCAP protection enabled**
+
+**\[ ] n8n secured**
+
+**\[ ] Telegram credentials protected**
+
+**\[ ] Backups configured**
+
+**\[ ] Recovery procedure documented**
+
+**\[ ] Security tests passed**
+
+**22.55 Final End-to-End Production Architecture**
+
+
+
+**The complete Extension AI Guard architecture is:**
+
+
+
+&#x20;                        **USER**
+
+&#x20;                          **↓**
+
+&#x20;                   **React Frontend**
+
+&#x20;                          **↓**
+
+&#x20;                 **Authentication**
+
+&#x20;                          **↓**
+
+&#x20;                    **FastAPI API**
+
+&#x20;                          **↓**
+
+&#x20;               **┌──────────┴──────────┐**
+
+&#x20;               **↓                     ↓**
+
+&#x20;         **Test Management       Dashboard Data**
+
+&#x20;               **↓**
+
+&#x20;       **Controlled Extension**
+
+&#x20;               **↓**
+
+&#x20;         **Network Activity**
+
+&#x20;               **↓**
+
+&#x20;         **Capture Engine**
+
+&#x20;               **↓**
+
+&#x20;       **Packet / Flow Processing**
+
+&#x20;               **↓**
+
+&#x20;         **Feature Engineering**
+
+&#x20;               **↓**
+
+&#x20;          **Feature Validation**
+
+&#x20;               **↓**
+
+&#x20;         **ML Inference Engine**
+
+&#x20;               **↓**
+
+&#x20;         **Risk Classification**
+
+&#x20;               **↓**
+
+&#x20;       **┌───────┴────────┐**
+
+&#x20;       **↓                ↓**
+
+&#x20;  **Detection         Dashboard**
+
+&#x20;       **↓**
+
+&#x20;  **Alert Policy**
+
+&#x20;       **↓**
+
+&#x20;      **n8n**
+
+&#x20;       **↓**
+
+&#x20;**Telegram Notification**
+
+
+
+
+
+**Research Path**
+
+&#x20;     **↓**
+
+&#x20;**Feature Dataset**
+
+&#x20;     **↓**
+
+&#x20;**Classical ML**
+
+&#x20;     **↓**
+
+&#x20;**Quantum ML**
+
+&#x20;     **↓**
+
+&#x20;**Model Comparison**
+
+&#x20;     **↓**
+
+&#x20;**Research Dashboard**
+
+**22.56 Complete Project Lifecycle**
+
+
+
+**The complete project lifecycle is:**
+
+
+
+**Project Development**
+
+&#x20;      **↓**
+
+**Architecture**
+
+&#x20;      **↓**
+
+**Implementation**
+
+&#x20;      **↓**
+
+**Testing**
+
+&#x20;      **↓**
+
+**Security Validation**
+
+&#x20;      **↓**
+
+**ML Evaluation**
+
+&#x20;      **↓**
+
+**Quantum Research**
+
+&#x20;      **↓**
+
+**Integration**
+
+&#x20;      **↓**
+
+**Dashboard**
+
+&#x20;      **↓**
+
+**Alerting**
+
+&#x20;      **↓**
+
+**Deployment**
+
+&#x20;      **↓**
+
+**Monitoring**
+
+&#x20;      **↓**
+
+**Maintenance**
+
+**22.57 Final System Principle**
+
+
+
+**Extension AI Guard will follow the principle:**
+
+
+
+**Secure by Design**
+
+&#x20;       **+**
+
+**Controlled Testing**
+
+&#x20;       **+**
+
+**Validated Detection**
+
+&#x20;       **+**
+
+**Explainable Results**
+
+&#x20;       **+**
+
+**Measured ML Performance**
+
+&#x20;       **+**
+
+**Experimental Quantum Research**
+
+&#x20;       **+**
+
+**Automated Alerting**
+
+&#x20;       **+**
+
+**Production Security**
+
+
+
+**The system is intended to demonstrate how browser-extension network behavior can be captured, processed, analyzed, classified, visualized, explained, and reported through a complete security platform.**
+
+
+
+**22.58 Final Architecture Goal**
+
+
+
+**The final goal is to create a complete security platform where:**
+
+
+
+**A user can start safely**
+
+&#x20;       **↓**
+
+**The extension generates controlled activity**
+
+&#x20;       **↓**
+
+**Network traffic is captured**
+
+&#x20;       **↓**
+
+**Traffic is processed**
+
+&#x20;       **↓**
+
+**Features are extracted**
+
+&#x20;       **↓**
+
+**ML models analyze the behavior**
+
+&#x20;       **↓**
+
+**Quantum ML provides experimental comparison**
+
+&#x20;       **↓**
+
+**The real-time engine produces a validated result**
+
+&#x20;       **↓**
+
+**The backend stores and serves the result**
+
+&#x20;       **↓**
+
+**The dashboard visualizes the evidence**
+
+&#x20;       **↓**
+
+**The AI Assistant explains the result**
+
+&#x20;       **↓**
+
+**n8n automates the response**
+
+&#x20;       **↓**
+
+**Telegram provides authorized notification**
+
+&#x20;       **↓**
+
+**The complete system can be tested, monitored,**
+
+**secured, versioned, and deployed**
+
+
+
