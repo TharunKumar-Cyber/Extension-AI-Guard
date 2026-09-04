@@ -9,6 +9,7 @@ def analyze_request(request: NetworkRequest) -> DetectionResult:
         "malware.test",
         "phishing.test",
         "suspicious.test",
+        "simulated-malware.local",
     }
 
     if request.domain.lower() in suspicious_domains:

@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Extension AI Guard - Malicious Simulator",
+  "version": "0.1.0",
+  "description": "Controlled security-testing extension for Extension AI Guard.",
+  "permissions": [
+    "alarms"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:8000/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
