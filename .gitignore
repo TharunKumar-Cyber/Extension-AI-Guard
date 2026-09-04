@@ -77,3 +77,4 @@ htmlcov/
 *.tmp
 *.temp
 *.bak
+extension_ai_guard.db
