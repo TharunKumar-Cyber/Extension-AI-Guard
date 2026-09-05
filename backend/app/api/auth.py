@@ -6,6 +6,7 @@ from backend.app.models.auth import RegisterRequest
 from backend.app.models.login import LoginRequest
 from backend.app.services.login_service import authenticate_user
 from backend.app.services.user_service import register_user
+from backend.app.services.jwt_service import create_access_token
 
 
 router = APIRouter(
@@ -15,7 +16,10 @@ router = APIRouter(
 
 
 @router.post("/register")
-def register(request: RegisterRequest, db: Session = Depends(get_db)):
+def register(
+    request: RegisterRequest,
+    db: Session = Depends(get_db),
+):
     user = register_user(
         db=db,
         username=request.username,
@@ -35,7 +39,10 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
 
 
 @router.post("/login")
-def login(request: LoginRequest, db: Session = Depends(get_db)):
+def login(
+    request: LoginRequest,
+    db: Session = Depends(get_db),
+):
     user = authenticate_user(
         db=db,
         email=request.email,
@@ -48,8 +55,11 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
             "message": "Invalid email or password",
         }
 
+    access_token = create_access_token(user.id)
+
     return {
         "status": "authenticated",
+        "access_token": access_token,
         "user": {
             "id": user.id,
             "username": user.username,
