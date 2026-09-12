@@ -182,3 +182,74 @@ Phase 12 → Dataset Generation
 Phase 13 → Dataset Preprocessing
 Phase 14 → Classical ML Training
 Phase 18 → Real-Time Detection Engine
+
+## Phase 6 — Benign Extension Development
+
+### Objective
+
+Phase 6 extends the benign browser extension so it can generate controlled, harmless network traffic for the Extension AI Guard testing pipeline.
+
+### Benign Traffic Generation
+
+The benign extension uses the browser alarms API to periodically generate a controlled request to the local test server.
+
+The controlled endpoint is:
+
+http://127.0.0.1:9000/safe
+
+The generated request uses:
+
+- Method: GET
+- Endpoint: `/safe`
+- Destination: `127.0.0.1:9000`
+- Purpose: Controlled benign traffic generation
+
+### Updated Extension Permissions
+
+The benign extension requires:
+
+- `webRequest`
+- `alarms`
+
+The existing `<all_urls>` host permission remains available for network observation during the laboratory stage.
+
+### Verification
+
+The updated benign extension was reloaded successfully in Microsoft Edge with no extension errors.
+
+The controlled test server was started successfully on:
+
+http://127.0.0.1:9000
+
+The benign extension successfully generated:
+
+```text
+GET /safe
+
+
+HTTP 200 OK
+
+The extension's service worker also observed the generated request:
+
+http://127.0.0.1:9000/safe
+method: GET
+type: xmlhttprequest
+
+The extension subsequently logged:
+
+Controlled safe traffic generated
+Data Isolation
+
+The benign traffic generated during this phase is intentionally directed to the local test server.
+
+Normal Internet traffic observed by the <all_urls> listener is not considered project dataset traffic and must not be used as training data.
+
+Phase 6 Completion
+
+Phase 6 establishes a functional benign browser-extension component capable of:
+
+Running as a Manifest V3 service worker
+Observing network requests
+Generating controlled benign traffic
+Communicating with the local test server
+Providing clean benign traffic for later capture and dataset-generation phases

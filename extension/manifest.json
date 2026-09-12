@@ -4,7 +4,8 @@
   "version": "0.1.0",
   "description": "Security monitoring and analysis for browser extension network activity.",
   "permissions": [
-    "webRequest"
+    "webRequest",
+    "alarms"
   ],
   "host_permissions": [
     "<all_urls>"
