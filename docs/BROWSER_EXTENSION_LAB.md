@@ -255,3 +255,141 @@ Phase 6 establishes a functional benign browser-extension component capable of:
 - Generating controlled benign traffic
 - Communicating with the local test server
 - Providing clean benign traffic for later capture and dataset-generation phases
+
+## Phase 7 — Controlled Malicious Extension Development
+
+### Objective
+
+Phase 7 introduces a controlled malicious-extension simulator for defensive security testing.
+
+The simulator does not contain real malware behavior. It is isolated to the local Extension AI Guard environment and generates predefined suspicious test traffic so the detection pipeline can be verified safely.
+
+### Malicious Simulator Structure
+
+The controlled simulator is located at:
+
+`extension/malicious/`
+
+The simulator contains:
+
+* `manifest.json`
+* `background.js`
+
+The extension uses Manifest V3 and runs its logic through a dedicated service worker.
+
+### Simulator Permissions
+
+The malicious simulator requires:
+
+* `alarms`
+
+Its host permission is restricted to:
+
+`http://127.0.0.1:8000/*`
+
+This keeps the simulator isolated from external destinations.
+
+### Controlled Traffic Generation
+
+The simulator uses the browser alarms API to periodically generate a controlled POST request to the local Extension AI Guard backend.
+
+The generated request contains:
+
+* Request ID
+* URL
+* Domain
+* HTTP method
+* Timestamp
+
+The simulated suspicious domain is:
+
+`simulated-malware.local`
+
+The request is sent only to the local backend environment.
+
+### Detection Integration
+
+The controlled request is processed by the existing detection pipeline.
+
+The detection service classifies:
+
+`simulated-malware.local`
+
+as a suspicious domain.
+
+The verified detection result is:
+
+* Malicious: `True`
+* Confidence: `0.95`
+* Threat type: `suspicious_domain`
+
+The detection explanation identifies the destination as a suspicious domain.
+
+### Alert Generation
+
+When the detection result is malicious, the alert service creates a high-severity alert.
+
+The verified alert contains:
+
+* Severity: `high`
+* Title: `Malicious Network Request Detected`
+* Detection result reference
+* Detection explanation
+* Creation timestamp
+
+### Security Event Generation
+
+The detected malicious request also produces a security event.
+
+The verified security event contains:
+
+* Event type: `network_request`
+* Source: `extension`
+* Severity: `high`
+* Security description
+* UTC timestamp
+
+### End-to-End Verification
+
+The malicious simulator was loaded successfully in Microsoft Edge.
+
+The simulator service worker successfully generated controlled test traffic.
+
+The backend received the simulator request successfully with HTTP `200 OK`.
+
+A direct controlled detection test was also performed using:
+
+`simulated-malware.local`
+
+The backend returned:
+
+* `status: analyzed`
+* `is_malicious: True`
+* `confidence: 0.95`
+* `threat_type: suspicious_domain`
+* High-severity alert
+* High-severity security event
+
+This confirms the complete controlled flow:
+
+`Malicious Simulator → Backend → Detection → Alert → Security Event`
+
+### Safety and Isolation
+
+The malicious extension is strictly a laboratory simulator.
+
+It does not target real systems, external organizations, real users, or unauthorized infrastructure.
+
+All suspicious behavior used during this phase is predefined and directed toward the project's controlled local environment.
+
+### Phase 7 Completion
+
+Phase 7 establishes a controlled malicious-extension simulation component capable of:
+
+* Running as a Manifest V3 service worker
+* Generating predefined suspicious test traffic
+* Sending controlled traffic to the local backend
+* Triggering suspicious-domain detection
+* Producing high-severity alerts
+* Producing security events
+* Supporting safe end-to-end security pipeline testing
