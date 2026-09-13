@@ -1,8 +1,8 @@
-# Browser Extension Lab
+﻿# Browser Extension Lab
 
 ## Phase
 
-Phase 5 — Browser Extension Lab (BENIGN)
+Phase 5 â€” Browser Extension Lab (BENIGN)
 
 ## Overview
 
@@ -39,8 +39,8 @@ Extension Implementation
 The benign extension is located at:
 
 extension/
-├── manifest.json
-└── background.js
+â”œâ”€â”€ manifest.json
+â””â”€â”€ background.js
 Manifest
 
 The extension uses:
@@ -172,16 +172,17 @@ Future Integration
 
 The Browser Extension Lab will later connect to:
 
-Phase 6  → Benign Extension Development
-Phase 7  → Controlled Malicious Extension Development
-Phase 8  → Test Server
-Phase 9  → Network Traffic Capture
-Phase 10 → Packet Flow / Processing
-Phase 11 → Feature Engineering
-Phase 12 → Dataset Generation
-Phase 13 → Dataset Preprocessing
-Phase 14 → Classical ML Training
-Phase 18 → Real-Time Detection Engine
+Phase 6  â†’ Benign Extension Development
+Phase 7  â†’ Controlled Malicious Extension Development
+Phase 8  â†’ Test Server
+Phase 9  â†’ Network Traffic Capture
+Phase 10 â†’ Packet Flow / Processing
+Phase 11 â†’ Feature Engineering
+Phase 12 â†’ Dataset Generation
+Phase 13 â†’ Dataset Preprocessing
+Phase 14 â†’ Classical ML Training
+Phase 18 â†’ Real-Time Detection Engine
+
 
 ## Phase 6 — Benign Extension Development
 
@@ -223,33 +224,34 @@ http://127.0.0.1:9000
 
 The benign extension successfully generated:
 
-```text
-GET /safe
+    GET /safe
 
+The test server returned:
 
-HTTP 200 OK
+    HTTP 200 OK
 
 The extension's service worker also observed the generated request:
 
-http://127.0.0.1:9000/safe
-method: GET
-type: xmlhttprequest
+    http://127.0.0.1:9000/safe
+    method: GET
+    type: xmlhttprequest
 
 The extension subsequently logged:
 
-Controlled safe traffic generated
-Data Isolation
+    Controlled safe traffic generated
+
+### Data Isolation
 
 The benign traffic generated during this phase is intentionally directed to the local test server.
 
-Normal Internet traffic observed by the <all_urls> listener is not considered project dataset traffic and must not be used as training data.
+Normal Internet traffic observed by the `<all_urls>` listener is not considered project dataset traffic and must not be used as training data.
 
-Phase 6 Completion
+### Phase 6 Completion
 
 Phase 6 establishes a functional benign browser-extension component capable of:
 
-Running as a Manifest V3 service worker
-Observing network requests
-Generating controlled benign traffic
-Communicating with the local test server
-Providing clean benign traffic for later capture and dataset-generation phases
+- Running as a Manifest V3 service worker
+- Observing network requests
+- Generating controlled benign traffic
+- Communicating with the local test server
+- Providing clean benign traffic for later capture and dataset-generation phases
