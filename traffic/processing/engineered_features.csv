@@ -1,0 +1,2 @@
+total_packets,total_bytes,average_packet_size,minimum_packet_size,maximum_packet_size,traffic_duration_seconds,packets_per_second,bytes_per_second,http_request_count,http_post_count
+12,1144,95.33333333333333,54,342,25.467670496,0.4711856155781795,44.919695351786444,1,0

@@ -1,4 +1,4 @@
-const TEST_SERVER = "http://127.0.0.1:9000";
+const TEST_SERVER = "http://192.168.31.9:9000";
 
 chrome.webRequest.onBeforeRequest.addListener(
   (details) => {
