@@ -1,0 +1,5 @@
+raw_feature,feature_type,transformation,reason
+time_relative,numeric,StandardScaler,Packet timing behavior
+frame_len,numeric,StandardScaler,Packet size behavior
+protocol,categorical,OneHotEncoder,Network protocol category
+http_method,categorical,OneHotEncoder,HTTP behavior category
