@@ -1,0 +1,117 @@
+{
+    "phase": 14,
+    "artifact": "classical_ml_baseline_metrics",
+    "generated_at_utc": "2026-09-21T08:43:34.140915+00:00",
+    "random_state": 42,
+    "test_samples": 29,
+    "training_samples": 115,
+    "processed_features": 8,
+    "label_mapping": {
+        "BENIGN": 0,
+        "MALICIOUS": 1
+    },
+    "models": [
+        {
+            "model": "logistic_regression",
+            "metrics": {
+                "accuracy": 0.8275862068965517,
+                "precision": 1.0,
+                "recall": 0.1666666666666666,
+                "f1_score": 0.2857142857142857,
+                "roc_auc": 0.7681159420289856,
+                "false_positives": 0,
+                "false_negatives": 5,
+                "true_negatives": 23,
+                "true_positives": 1,
+                "train_time_sec": 0.036843,
+                "inference_time_sec": 0.0154472999856807,
+                "inference_time_ms_per_sample": 0.5326655167476114
+            }
+        },
+        {
+            "model": "decision_tree",
+            "metrics": {
+                "accuracy": 0.8275862068965517,
+                "precision": 0.5714285714285714,
+                "recall": 0.6666666666666666,
+                "f1_score": 0.6153846153846154,
+                "roc_auc": 0.7608695652173912,
+                "false_positives": 3,
+                "false_negatives": 2,
+                "true_negatives": 20,
+                "true_positives": 4,
+                "train_time_sec": 0.002781,
+                "inference_time_sec": 0.0016652999911457,
+                "inference_time_ms_per_sample": 0.0574241376257148
+            }
+        },
+        {
+            "model": "random_forest",
+            "metrics": {
+                "accuracy": 0.7586206896551724,
+                "precision": 0.4285714285714285,
+                "recall": 0.5,
+                "f1_score": 0.4615384615384615,
+                "roc_auc": 0.7572463768115942,
+                "false_positives": 4,
+                "false_negatives": 3,
+                "true_negatives": 19,
+                "true_positives": 3,
+                "train_time_sec": 0.094974,
+                "inference_time_sec": 0.006668800022453,
+                "inference_time_ms_per_sample": 0.2299586214638989
+            }
+        },
+        {
+            "model": "svm",
+            "metrics": {
+                "accuracy": 0.8275862068965517,
+                "precision": 1.0,
+                "recall": 0.1666666666666666,
+                "f1_score": 0.2857142857142857,
+                "roc_auc": 0.7681159420289855,
+                "false_positives": 0,
+                "false_negatives": 5,
+                "true_negatives": 23,
+                "true_positives": 1,
+                "train_time_sec": 0.038528,
+                "inference_time_sec": 0.0023633000091649,
+                "inference_time_ms_per_sample": 0.0814931037643089
+            }
+        },
+        {
+            "model": "knn",
+            "metrics": {
+                "accuracy": 0.8275862068965517,
+                "precision": 0.6,
+                "recall": 0.5,
+                "f1_score": 0.5454545454545454,
+                "roc_auc": 0.6557971014492754,
+                "false_positives": 2,
+                "false_negatives": 3,
+                "true_negatives": 21,
+                "true_positives": 3,
+                "train_time_sec": 0.00246,
+                "inference_time_sec": 0.0055450000218115,
+                "inference_time_ms_per_sample": 0.1912068973038474
+            }
+        },
+        {
+            "model": "gradient_boosting",
+            "metrics": {
+                "accuracy": 0.8275862068965517,
+                "precision": 0.5555555555555556,
+                "recall": 0.8333333333333334,
+                "f1_score": 0.6666666666666666,
+                "roc_auc": 0.9057971014492754,
+                "false_positives": 4,
+                "false_negatives": 1,
+                "true_negatives": 19,
+                "true_positives": 5,
+                "train_time_sec": 0.074427,
+                "inference_time_sec": 0.0020574000081978,
+                "inference_time_ms_per_sample": 0.0709448278688922
+            }
+        }
+    ]
+}

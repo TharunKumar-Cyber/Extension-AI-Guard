@@ -1,5 +1,5 @@
 @'
-# Extension AI Guard — Phase 14 Classical Machine Learning
+# Extension AI Guard â€” Phase 14 Classical Machine Learning
 
 ## 1. Phase Overview
 
@@ -534,51 +534,156 @@ The model should learn network behavior rather than laboratory identity.
 
 ## 19. Relationship With Later Phases
 
-### Phase 15 — Quantum ML Research Lab
+### Phase 15 â€” Quantum ML Research Lab
 
 The classical results from Phase 14 will establish the baseline against which quantum approaches can be studied.
 
-### Phase 16 — Model Comparison
+### Phase 16 â€” Model Comparison
 
 Phase 16 will consume the structured classical metrics and compare the classical and quantum approaches using consistent evaluation methodology.
 
-### Phase 17 — Model Evaluation
+### Phase 17 â€” Model Evaluation
 
 More detailed evaluation and validation will follow.
 
-### Phase 18 — Real-Time Detection Engine
+### Phase 18 â€” Real-Time Detection Engine
 
 A selected validated model can eventually be integrated into real-time detection.
 
 The conceptual flow is:
 
 Browser Extension
-→ Network Traffic
-→ Feature Extraction
-→ Phase 13 Preprocessing
-→ Trained Model
-→ BENIGN / MALICIOUS
-→ Confidence
-→ Detection System
+â†’ Network Traffic
+â†’ Feature Extraction
+â†’ Phase 13 Preprocessing
+â†’ Trained Model
+â†’ BENIGN / MALICIOUS
+â†’ Confidence
+â†’ Detection System
 
-### Phase 19 — FastAPI API
+### Phase 19 â€” FastAPI API
 
 The trained detection capability will later be exposed through the EAG backend.
 
-### Phase 20 — Web Dashboard
+### Phase 20 â€” Web Dashboard
 
 The dashboard will eventually display detection results and relevant model information.
 
-### Phase 21 — n8n Automation
+### Phase 21 â€” n8n Automation
 
 Automation workflows will consume detection events.
 
-### Phase 22 — Telegram Alerting
+### Phase 22 â€” Telegram Alerting
 
 Relevant security alerts will eventually be delivered through Telegram.
 
+
 ---
 
+## 19.5 Actual Phase 14 Results
+
+### Dataset and Experiment Configuration
+
+The Phase 14 experiment used the frozen and validated Phase 13 processed dataset.
+
+| Item | Value |
+|---|---:|
+| Training samples | 115 |
+| Testing samples | 29 |
+| Processed features | 8 |
+| Training BENIGN | 89 |
+| Training MALICIOUS | 26 |
+| Testing BENIGN | 23 |
+| Testing MALICIOUS | 6 |
+| Random state | 42 |
+
+The test set remained isolated from model training and preprocessing fitting.
+
+### Classical Model Evaluation
+
+The following six classical machine learning models were trained and evaluated:
+
+| Model | Accuracy | Precision | Recall | F1-score | ROC-AUC | FP | FN |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Logistic Regression | 0.8276 | 1.0000 | 0.1667 | 0.2857 | 0.7681 | 0 | 5 |
+| Decision Tree | 0.8276 | 0.5714 | 0.6667 | 0.6154 | 0.7609 | 3 | 2 |
+| Random Forest | 0.7586 | 0.4286 | 0.5000 | 0.4615 | 0.7572 | 4 | 3 |
+| SVM | 0.8276 | 1.0000 | 0.1667 | 0.2857 | 0.7681 | 0 | 5 |
+| KNN | 0.8276 | 0.6000 | 0.5000 | 0.5455 | 0.6558 | 2 | 3 |
+| Gradient Boosting | 0.8276 | 0.5556 | 0.8333 | 0.6667 | 0.9058 | 4 | 1 |
+
+The results are stored in:
+
+`ml/models/classical_ml_evaluation.csv`
+
+### Execution Benchmarks
+
+Training and inference performance were measured during the Phase 14 experiment.
+
+| Model | Training Time (sec) | Inference Time (sec) | Inference per Sample (ms) |
+|---|---:|---:|---:|
+| Logistic Regression | 0.036843 | 0.015447 | 0.532666 |
+| Decision Tree | 0.002781 | 0.001665 | 0.057424 |
+| Random Forest | 0.094974 | 0.006669 | 0.229959 |
+| SVM | 0.038528 | 0.002363 | 0.081493 |
+| KNN | 0.002460 | 0.005545 | 0.191207 |
+| Gradient Boosting | 0.074427 | 0.002057 | 0.070945 |
+
+These timings are benchmark measurements from the Phase 14 execution environment and are not treated as universal performance guarantees.
+
+### Confusion Matrix Results
+
+The held-out test set contains 29 samples. The recorded confusion-matrix counts were:
+
+| Model | TN | TP | FP | FN |
+|---|---:|---:|---:|---:|
+| Logistic Regression | 23 | 1 | 0 | 5 |
+| Decision Tree | 20 | 4 | 3 | 2 |
+| Random Forest | 19 | 3 | 4 | 3 |
+| SVM | 23 | 1 | 0 | 5 |
+| KNN | 21 | 3 | 2 | 3 |
+| Gradient Boosting | 19 | 5 | 4 | 1 |
+
+### Baseline Metrics Artifact
+
+A unified machine-readable baseline was generated at:
+
+`ml/models/baseline_metrics.json`
+
+The artifact contains:
+
+- Accuracy
+- Precision
+- Recall
+- F1-score
+- ROC-AUC
+- False positives
+- False negatives
+- True negatives
+- True positives
+- Training time
+- Inference time
+- Inference time per sample
+
+### Automated Validation
+
+The Phase 14 automated validation completed successfully:
+
+`ALL TESTS PASSED: 10/10`
+
+The tests verified model artifact existence and loading, preprocessing artifact integrity, dataset dimensions, missing-value protection, evaluation structure, baseline metric consistency, timing benchmarks, and confusion-matrix consistency.
+
+### Interpretation and Limitation
+
+The Phase 14 results establish a classical ML baseline rather than a final production model.
+
+On the current 29-sample held-out test set, Gradient Boosting produced the highest observed ROC-AUC (0.9058), recall (0.8333), and F1-score (0.6667). It also produced 1 false negative and 4 false positives.
+
+These observations must not be treated as a final model selection decision. The test set contains only 6 MALICIOUS samples, and the dataset originates from a controlled laboratory environment. Phase 16 will perform the formal model comparison, while Phase 17 will perform deeper evaluation.
+
+The primary objective remains generalization to previously unseen browser extensions rather than memorization of the controlled Phase 12 laboratory endpoints.
+
+---
 ## 20. Phase 14 Completion Criteria
 
 Phase 14 will be considered complete only when all of the following are satisfied:
@@ -664,6 +769,3 @@ Phase 15 will use these results as the classical baseline for the Quantum ML res
 Phase 14 establishes the classical machine learning foundation of Extension AI Guard.
 
 The phase trains multiple classical algorithms on the validated Phase 13 feature representation, evaluates them using consistent cybersecurity-relevant metrics, benchmarks execution performance, preserves trained artifacts, and produces a machine-readable baseline for the later Quantum ML, comparison, evaluation, and real-time detection phases.
-
-The implementation must prioritize reproducibility, leakage prevention, honest evaluation, and future integration rather than artificially optimizing the current small laboratory dataset.
-'@ | Set-Content -Encoding UTF8 .\docs\PHASE_14_CLASSICAL_ML.md
