@@ -1,0 +1,2 @@
+accuracy,precision,recall,f1,roc_auc,true_negatives,false_positives,false_negatives,true_positives,total_inference_time_seconds,inference_time_per_sample_seconds
+0.7586206896551724,0.0,0.0,0.0,0.7391304347826086,22,1,6,0,16.907763800001703,0.5830263379310933

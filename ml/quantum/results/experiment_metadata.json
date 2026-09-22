@@ -1,0 +1,27 @@
+{
+  "phase": 15,
+  "phase_name": "Quantum Machine Learning",
+  "config_version": "phase15-v1",
+  "execution_mode": "simulator-first",
+  "random_state": 42,
+  "classical_control": "RBF SVM",
+  "quantum_kernel": {
+    "name": "fidelity_quantum_kernel",
+    "qubits": 8,
+    "feature_map_repetitions": 1,
+    "entanglement": "linear",
+    "simulator_backend": "statevector",
+    "model_path": "ml\\quantum\\artifacts\\quantum_kernel\\qsvc_model.joblib",
+    "kernel_matrix_path": "ml\\quantum\\artifacts\\quantum_kernel\\kernel_matrix.npy"
+  },
+  "vqc": {
+    "qubits": 8,
+    "ansatz_repetitions": 1,
+    "ansatz_entanglement": "linear",
+    "optimizer": "COBYLA",
+    "optimizer_max_iterations": 100,
+    "model_path": "ml\\quantum\\artifacts\\vqc\\vqc_model.joblib",
+    "loss_history_path": "ml\\quantum\\artifacts\\vqc\\loss_history.csv"
+  },
+  "generated_at_utc": "2026-09-22T16:45:26.511308+00:00"
+}
