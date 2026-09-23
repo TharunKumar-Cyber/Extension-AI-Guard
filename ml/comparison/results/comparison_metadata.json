@@ -1,0 +1,32 @@
+{
+  "phase": 16,
+  "experiment": "classical_vs_quantum_model_comparison",
+  "generated_at_utc": "2026-09-23T04:22:10.058376+00:00",
+  "project": "Extension AI Guard",
+  "comparison_scope": {
+    "classical_phase": 14,
+    "quantum_phase": 15,
+    "phase_13_contract_preserved": true,
+    "retraining_performed": false,
+    "test_set_tuning_performed": false
+  },
+  "input_artifacts": {
+    "phase_14_results": "ml\\models\\classical_ml_evaluation.csv",
+    "phase_15_results": "ml\\quantum\\results\\quantum_ml_evaluation.csv"
+  },
+  "model_count": 8,
+  "classical_model_count": 6,
+  "quantum_model_count": 2,
+  "python_version": "3.13.9 (tags/v3.13.9:8183fa5, Oct 14 2025, 14:09:13) [MSC v.1944 64 bit (AMD64)]",
+  "python_implementation": "CPython",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "random_state": 42,
+  "limitations": [
+    "Phase 16 uses the small Phase 13 dataset.",
+    "The Phase 13 test set contains only 29 samples.",
+    "Only six malicious test samples are available.",
+    "Observed results do not establish quantum advantage.",
+    "Runtime measurements are configuration-dependent.",
+    "Phase 16 does not select a production model."
+  ]
+}
