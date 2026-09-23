@@ -1,0 +1,58 @@
+[
+  {
+    "model": "logistic_regression",
+    "true_negatives": 23,
+    "false_positives": 0,
+    "false_negatives": 5,
+    "true_positives": 1
+  },
+  {
+    "model": "decision_tree",
+    "true_negatives": 20,
+    "false_positives": 3,
+    "false_negatives": 2,
+    "true_positives": 4
+  },
+  {
+    "model": "random_forest",
+    "true_negatives": 19,
+    "false_positives": 4,
+    "false_negatives": 3,
+    "true_positives": 3
+  },
+  {
+    "model": "svm",
+    "true_negatives": 23,
+    "false_positives": 0,
+    "false_negatives": 5,
+    "true_positives": 1
+  },
+  {
+    "model": "knn",
+    "true_negatives": 21,
+    "false_positives": 2,
+    "false_negatives": 3,
+    "true_positives": 3
+  },
+  {
+    "model": "gradient_boosting",
+    "true_negatives": 19,
+    "false_positives": 4,
+    "false_negatives": 1,
+    "true_positives": 5
+  },
+  {
+    "model": "qsvc",
+    "true_negatives": 22,
+    "false_positives": 1,
+    "false_negatives": 6,
+    "true_positives": 0
+  },
+  {
+    "model": "vqc",
+    "true_negatives": 20,
+    "false_positives": 3,
+    "false_negatives": 6,
+    "true_positives": 0
+  }
+]

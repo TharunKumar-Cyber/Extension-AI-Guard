@@ -1,0 +1,386 @@
+[
+  {
+    "model": "logistic_regression",
+    "test_index": 0,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.2372194558617499
+  },
+  {
+    "model": "logistic_regression",
+    "test_index": 14,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.30871469986501715
+  },
+  {
+    "model": "logistic_regression",
+    "test_index": 17,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.32841299534225554
+  },
+  {
+    "model": "logistic_regression",
+    "test_index": 22,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.23116467380576322
+  },
+  {
+    "model": "logistic_regression",
+    "test_index": 23,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.3087132849991761
+  },
+  {
+    "model": "decision_tree",
+    "test_index": 9,
+    "actual_label": "BENIGN",
+    "predicted_label": "MALICIOUS",
+    "error_type": "false_positive",
+    "score": 1.0
+  },
+  {
+    "model": "decision_tree",
+    "test_index": 11,
+    "actual_label": "BENIGN",
+    "predicted_label": "MALICIOUS",
+    "error_type": "false_positive",
+    "score": 1.0
+  },
+  {
+    "model": "decision_tree",
+    "test_index": 14,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.0
+  },
+  {
+    "model": "decision_tree",
+    "test_index": 19,
+    "actual_label": "BENIGN",
+    "predicted_label": "MALICIOUS",
+    "error_type": "false_positive",
+    "score": 1.0
+  },
+  {
+    "model": "decision_tree",
+    "test_index": 23,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.0
+  },
+  {
+    "model": "random_forest",
+    "test_index": 9,
+    "actual_label": "BENIGN",
+    "predicted_label": "MALICIOUS",
+    "error_type": "false_positive",
+    "score": 0.66
+  },
+  {
+    "model": "random_forest",
+    "test_index": 12,
+    "actual_label": "BENIGN",
+    "predicted_label": "MALICIOUS",
+    "error_type": "false_positive",
+    "score": 0.63
+  },
+  {
+    "model": "random_forest",
+    "test_index": 13,
+    "actual_label": "BENIGN",
+    "predicted_label": "MALICIOUS",
+    "error_type": "false_positive",
+    "score": 0.7
+  },
+  {
+    "model": "random_forest",
+    "test_index": 14,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.0
+  },
+  {
+    "model": "random_forest",
+    "test_index": 17,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.47
+  },
+  {
+    "model": "random_forest",
+    "test_index": 19,
+    "actual_label": "BENIGN",
+    "predicted_label": "MALICIOUS",
+    "error_type": "false_positive",
+    "score": 0.54
+  },
+  {
+    "model": "random_forest",
+    "test_index": 23,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.17
+  },
+  {
+    "model": "svm",
+    "test_index": 0,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.22145238718179366
+  },
+  {
+    "model": "svm",
+    "test_index": 14,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.22065670687155964
+  },
+  {
+    "model": "svm",
+    "test_index": 17,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.2598977376126306
+  },
+  {
+    "model": "svm",
+    "test_index": 22,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.2203541615374762
+  },
+  {
+    "model": "svm",
+    "test_index": 23,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.2206565321401851
+  },
+  {
+    "model": "knn",
+    "test_index": 12,
+    "actual_label": "BENIGN",
+    "predicted_label": "MALICIOUS",
+    "error_type": "false_positive",
+    "score": 0.6
+  },
+  {
+    "model": "knn",
+    "test_index": 13,
+    "actual_label": "BENIGN",
+    "predicted_label": "MALICIOUS",
+    "error_type": "false_positive",
+    "score": 0.6
+  },
+  {
+    "model": "knn",
+    "test_index": 14,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.0
+  },
+  {
+    "model": "knn",
+    "test_index": 17,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.2
+  },
+  {
+    "model": "knn",
+    "test_index": 23,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.0
+  },
+  {
+    "model": "gradient_boosting",
+    "test_index": 2,
+    "actual_label": "BENIGN",
+    "predicted_label": "MALICIOUS",
+    "error_type": "false_positive",
+    "score": 0.7003148520727926
+  },
+  {
+    "model": "gradient_boosting",
+    "test_index": 9,
+    "actual_label": "BENIGN",
+    "predicted_label": "MALICIOUS",
+    "error_type": "false_positive",
+    "score": 0.8681005349668437
+  },
+  {
+    "model": "gradient_boosting",
+    "test_index": 11,
+    "actual_label": "BENIGN",
+    "predicted_label": "MALICIOUS",
+    "error_type": "false_positive",
+    "score": 0.8205997859896157
+  },
+  {
+    "model": "gradient_boosting",
+    "test_index": 14,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.03950205601236927
+  },
+  {
+    "model": "gradient_boosting",
+    "test_index": 19,
+    "actual_label": "BENIGN",
+    "predicted_label": "MALICIOUS",
+    "error_type": "false_positive",
+    "score": 0.7139192950670095
+  },
+  {
+    "model": "qsvc",
+    "test_index": 0,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": -0.27151051314414876
+  },
+  {
+    "model": "qsvc",
+    "test_index": 12,
+    "actual_label": "BENIGN",
+    "predicted_label": "MALICIOUS",
+    "error_type": "false_positive",
+    "score": 0.3024629418175032
+  },
+  {
+    "model": "qsvc",
+    "test_index": 14,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": -0.9995028219070489
+  },
+  {
+    "model": "qsvc",
+    "test_index": 17,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": -1.0273216166031434
+  },
+  {
+    "model": "qsvc",
+    "test_index": 20,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": -0.2646236112811027
+  },
+  {
+    "model": "qsvc",
+    "test_index": 22,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": -0.6337172256333173
+  },
+  {
+    "model": "qsvc",
+    "test_index": 23,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": -0.9995752177945222
+  },
+  {
+    "model": "vqc",
+    "test_index": 0,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.2412109375
+  },
+  {
+    "model": "vqc",
+    "test_index": 1,
+    "actual_label": "BENIGN",
+    "predicted_label": "MALICIOUS",
+    "error_type": "false_positive",
+    "score": 0.7060546875
+  },
+  {
+    "model": "vqc",
+    "test_index": 7,
+    "actual_label": "BENIGN",
+    "predicted_label": "MALICIOUS",
+    "error_type": "false_positive",
+    "score": 0.662109375
+  },
+  {
+    "model": "vqc",
+    "test_index": 14,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.3291015625
+  },
+  {
+    "model": "vqc",
+    "test_index": 15,
+    "actual_label": "BENIGN",
+    "predicted_label": "MALICIOUS",
+    "error_type": "false_positive",
+    "score": 0.6103515625
+  },
+  {
+    "model": "vqc",
+    "test_index": 17,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.4228515625
+  },
+  {
+    "model": "vqc",
+    "test_index": 20,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.4892578125
+  },
+  {
+    "model": "vqc",
+    "test_index": 22,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.26953125
+  },
+  {
+    "model": "vqc",
+    "test_index": 23,
+    "actual_label": "MALICIOUS",
+    "predicted_label": "BENIGN",
+    "error_type": "false_negative",
+    "score": 0.3291015625
+  }
+]

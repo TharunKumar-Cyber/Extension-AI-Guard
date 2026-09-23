@@ -1,0 +1,40 @@
+{
+  "phase": 17,
+  "experiment": "Formal model evaluation",
+  "timestamp_utc": "2026-09-23T06:44:33.152594+00:00",
+  "dataset_contract": {
+    "source": "Phase 13 frozen processed test set",
+    "test_samples": 29,
+    "feature_count": 8,
+    "benign_samples": 23,
+    "malicious_samples": 6,
+    "label_mapping": {
+      "BENIGN": 0,
+      "MALICIOUS": 1
+    },
+    "random_state": 42
+  },
+  "evaluation_policy": {
+    "retraining": 0,
+    "test_set_tuning": 0,
+    "test_set_modification": 0,
+    "phase_13_preprocessing_reused": 1
+  },
+  "software": {
+    "python": "3.13.9",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scikit_learn": "1.9.1"
+  },
+  "model_count": 8,
+  "models": [
+    "logistic_regression",
+    "decision_tree",
+    "random_forest",
+    "svm",
+    "knn",
+    "gradient_boosting",
+    "qsvc",
+    "vqc"
+  ]
+}

@@ -1,0 +1,122 @@
+[
+  {
+    "model": "logistic_regression",
+    "BENIGN": {
+      "precision": 0.8214285714285714,
+      "recall": 1.0,
+      "f1_score": 0.9019607843137255,
+      "support": 23
+    },
+    "MALICIOUS": {
+      "precision": 1.0,
+      "recall": 0.16666666666666666,
+      "f1_score": 0.2857142857142857,
+      "support": 6
+    }
+  },
+  {
+    "model": "decision_tree",
+    "BENIGN": {
+      "precision": 0.9090909090909091,
+      "recall": 0.8695652173913043,
+      "f1_score": 0.8888888888888888,
+      "support": 23
+    },
+    "MALICIOUS": {
+      "precision": 0.5714285714285714,
+      "recall": 0.6666666666666666,
+      "f1_score": 0.6153846153846154,
+      "support": 6
+    }
+  },
+  {
+    "model": "random_forest",
+    "BENIGN": {
+      "precision": 0.8636363636363636,
+      "recall": 0.8260869565217391,
+      "f1_score": 0.8444444444444444,
+      "support": 23
+    },
+    "MALICIOUS": {
+      "precision": 0.42857142857142855,
+      "recall": 0.5,
+      "f1_score": 0.46153846153846156,
+      "support": 6
+    }
+  },
+  {
+    "model": "svm",
+    "BENIGN": {
+      "precision": 0.8214285714285714,
+      "recall": 1.0,
+      "f1_score": 0.9019607843137255,
+      "support": 23
+    },
+    "MALICIOUS": {
+      "precision": 1.0,
+      "recall": 0.16666666666666666,
+      "f1_score": 0.2857142857142857,
+      "support": 6
+    }
+  },
+  {
+    "model": "knn",
+    "BENIGN": {
+      "precision": 0.875,
+      "recall": 0.9130434782608695,
+      "f1_score": 0.8936170212765957,
+      "support": 23
+    },
+    "MALICIOUS": {
+      "precision": 0.6,
+      "recall": 0.5,
+      "f1_score": 0.5454545454545454,
+      "support": 6
+    }
+  },
+  {
+    "model": "gradient_boosting",
+    "BENIGN": {
+      "precision": 0.95,
+      "recall": 0.8260869565217391,
+      "f1_score": 0.8837209302325582,
+      "support": 23
+    },
+    "MALICIOUS": {
+      "precision": 0.5555555555555556,
+      "recall": 0.8333333333333334,
+      "f1_score": 0.6666666666666666,
+      "support": 6
+    }
+  },
+  {
+    "model": "qsvc",
+    "BENIGN": {
+      "precision": 0.7857142857142857,
+      "recall": 0.9565217391304348,
+      "f1_score": 0.8627450980392157,
+      "support": 23
+    },
+    "MALICIOUS": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 6
+    }
+  },
+  {
+    "model": "vqc",
+    "BENIGN": {
+      "precision": 0.7692307692307693,
+      "recall": 0.8695652173913043,
+      "f1_score": 0.8163265306122449,
+      "support": 23
+    },
+    "MALICIOUS": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 6
+    }
+  }
+]
