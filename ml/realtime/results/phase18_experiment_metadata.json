@@ -1,0 +1,100 @@
+{
+  "phase": 18,
+  "phase_name": "Real-Time Detection Engine",
+  "experiment_id": "EAG-PHASE18-REALTIME-001",
+  "generated_at_utc": "2026-09-24T14:42:33.748606+00:00",
+  "project": "Extension AI Guard",
+  "feature_schema_version": "phase13-v1",
+  "dataset_contract": {
+    "source_phase": 13,
+    "training_samples": 115,
+    "testing_samples": 29,
+    "processed_features": 8,
+    "random_state": 42,
+    "label_mapping": {
+      "0": "BENIGN",
+      "1": "MALICIOUS"
+    }
+  },
+  "model_configuration": {
+    "default_model": "gradient_boosting",
+    "available_classical_models": [
+      "decision_tree",
+      "gradient_boosting",
+      "knn",
+      "logistic_regression",
+      "random_forest",
+      "svm"
+    ],
+    "production_model_status": "configurable engineering model; not declared as final production model"
+  },
+  "preprocessing": {
+    "preprocessor_path": "ml\\preprocessing\\artifacts\\preprocessor.joblib",
+    "preprocessor_type": "ColumnTransformer"
+  },
+  "runtime": {
+    "python_version": "3.13.9",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "scikit_learn_version": "1.9.1",
+    "joblib_version": "1.6.0",
+    "qiskit_version": "2.5.2",
+    "qiskit_machine_learning_version": "0.9.1"
+  },
+  "realtime_benchmark": {
+    "samples": 50,
+    "wall_time_seconds": 0.23688509999919916,
+    "throughput_per_second": 211.07279436388797,
+    "avg_detection_ms": 4.737122000078671,
+    "min_detection_ms": 3.311000000394415,
+    "max_detection_ms": 56.23820000255364,
+    "errors": 0
+  },
+  "benchmark_configuration": {
+    "samples": 50,
+    "observation_protocol": "TCP",
+    "observation_http_method": null,
+    "observation_frame_len": 512,
+    "observation_time_relative": 1.25
+  },
+  "pcap_replay": {
+    "benign_capture": "dataset/benign_01.pcapng",
+    "controlled_malicious_capture": "dataset/safe_01_invalid_malicious_test.pcapng",
+    "replay_adapter": "ml/realtime/pcap_replay.py"
+  },
+  "quantum_context": {
+    "source_phase": 15,
+    "qsvc_implemented": true,
+    "vqc_implemented": true,
+    "quantum_resource_measurements": "recorded in Phase 15/16 artifacts",
+    "realtime_quantum_execution": false,
+    "note": "Phase 18 real-time detection uses configurable classical models. Quantum models remain part of the research and comparison track and are not silently substituted into the realtime engine."
+  },
+  "logging": {
+    "format": "JSON Lines",
+    "logger_module": "ml/realtime/detection_logger.py",
+    "log_file": "ml/realtime/logs/detections.jsonl"
+  },
+  "reproducibility": {
+    "random_state": 42,
+    "simulator_first": true,
+    "test_set_tuning": false,
+    "dataset_modified_for_realtime": false,
+    "phase13_preprocessing_reused": true,
+    "benchmark_artifact": "ml/realtime/results/phase18_benchmark.json"
+  },
+  "security_controls": {
+    "raw_ip_features_used": false,
+    "raw_uri_features_used": false,
+    "frame_number_used": false,
+    "raw_capture_ports_used": false,
+    "input_schema_validation": true,
+    "structured_detection_logging": true
+  },
+  "limitations": [
+    "Phase 18 uses the frozen Phase 13 feature contract.",
+    "The current dataset is small and controlled.",
+    "PCAP replay classification is not perfect and must not be interpreted as production validation.",
+    "Benchmark measurements are environment-dependent.",
+    "No quantum advantage or production superiority claim is made."
+  ]
+}

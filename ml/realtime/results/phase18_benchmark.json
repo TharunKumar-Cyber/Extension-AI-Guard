@@ -1,0 +1,9 @@
+{
+  "samples": 50,
+  "wall_time_seconds": 0.23688509999919916,
+  "throughput_per_second": 211.07279436388797,
+  "avg_detection_ms": 4.737122000078671,
+  "min_detection_ms": 3.311000000394415,
+  "max_detection_ms": 56.23820000255364,
+  "errors": 0
+}
