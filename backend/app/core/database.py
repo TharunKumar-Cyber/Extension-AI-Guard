@@ -13,15 +13,24 @@ def get_database_url() -> str:
     return settings.database_url
 
 
+if settings.database_url:
+    engine = create_engine(settings.database_url)
+    SessionLocal = sessionmaker(
+        bind=engine,
+        autocommit=False,
+        autoflush=False,
+    )
+else:
+    engine = None
+    SessionLocal = None
+
+
 def get_db():
     """Provide a database session to API endpoints."""
-    if not settings.database_url:
+    if SessionLocal is None:
         raise RuntimeError("Database is not configured")
 
-    engine = create_engine(settings.database_url)
-    session_local = sessionmaker(bind=engine)
-
-    db = session_local()
+    db: Session = SessionLocal()
 
     try:
         yield db
