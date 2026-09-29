@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";\nimport type { FormEvent } from "react";
 import { loginUser, registerUser } from "./api/auth";
 import { clearToken, getToken } from "./api/client";
 import { getAegisStatus, sendAegisMessage } from "./api/aegis";
