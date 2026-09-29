@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";\nimport type { FormEvent } from "react";
 import { loginUser, registerUser } from "./api/auth";
 import { clearToken, getToken } from "./api/client";
-import { getAegisStatus, sendAegisMessage } from "./api/aegis";
+import { explainAlert, getAegisKnowledge, getAegisStatus, getAegisWelcome, sendAegisMessage } from "./api/aegis";
 import {
   analyzeNetworkRequest,
   getAlerts,
@@ -211,11 +211,11 @@ function Overview() {
 
 function DetectionPage({ onNotice }: { onNotice: (n: Notice) => void }) {
   const [form, setForm] = useState({ request_id: `req-${Date.now()}`, url: "http://example.test/", method: "GET", domain: "example.test", timestamp: new Date().toISOString() });
-  const [result, setResult] = useState<Detection | null>(null);
+  const [result, setResult] = useState<Detection | null>(null);\n  const [analysisDetails, setAnalysisDetails] = useState<{ alert: Alert | null; security_event: SecurityEvent } | null>(null);
   const [busy, setBusy] = useState(false);
   async function submit(e: FormEvent) {
     e.preventDefault(); setBusy(true); onNotice(null);
-    try { const response = await analyzeNetworkRequest(form); setResult(response.detection); onNotice({ kind: "success", text: "Network request analyzed and persisted." }); }
+    try { const response = await analyzeNetworkRequest(form); setResult(response.detection); setAnalysisDetails({ alert: response.alert, security_event: response.security_event }); onNotice({ kind: "success", text: "Network request analyzed and persisted." }); }
     catch (error) { onNotice({ kind: "error", text: error instanceof Error ? error.message : "Analysis failed." }); }
     finally { setBusy(false); }
   }
@@ -231,7 +231,7 @@ function DetectionPage({ onNotice }: { onNotice: (n: Notice) => void }) {
       </div>
       <button disabled={busy} className="mt-5 rounded-xl bg-cyan-500 px-5 py-3 font-semibold text-slate-950 disabled:opacity-50">{busy ? "Analyzing…" : "Analyze request"}</button>
     </form>
-    {result && <section className="mt-5 rounded-2xl border border-slate-800 bg-slate-900/80 p-6"><h2 className="text-lg font-semibold text-white">Detection result</h2><div className="mt-4 grid gap-3 sm:grid-cols-2"><Info label="Classification" value={result.is_malicious ? "MALICIOUS" : "BENIGN"} /><Info label="Confidence" value={`${(result.confidence * 100).toFixed(1)}%`} /><Info label="Threat type" value={result.threat_type} /><Info label="Request ID" value={result.request_id} /><div className="sm:col-span-2"><Info label="Explanation" value={result.explanation} /></div></div></section>}
+    {result && <section className="mt-5 rounded-2xl border border-slate-800 bg-slate-900/80 p-6"><h2 className="text-lg font-semibold text-white">Detection result</h2><div className="mt-4 grid gap-3 sm:grid-cols-2"><Info label="Classification" value={result.is_malicious ? "MALICIOUS" : "BENIGN"} /><Info label="Confidence" value={`${(result.confidence * 100).toFixed(1)}%`} /><Info label="Threat type" value={result.threat_type} /><Info label="Request ID" value={result.request_id} /><div className="sm:col-span-2"><Info label="Explanation" value={result.explanation} /></div>{analysisDetails && <><Info label="Alert" value={analysisDetails.alert ? `${analysisDetails.alert.severity.toUpperCase()}: ${analysisDetails.alert.title}` : "No alert generated"} /><Info label="Security event" value={`${analysisDetails.security_event.event_type} / ${analysisDetails.security_event.severity}`} /></>}</div></section>}
   </>;
 }
 
@@ -251,10 +251,42 @@ function EventsPage() {
 }
 
 function AegisPage({ onNotice }: { onNotice: (n: Notice) => void }) {
-  const [status, setStatus] = useState<Record<string, unknown> | null>(null); const [message, setMessage] = useState(""); const [response, setResponse] = useState<Record<string, unknown> | null>(null);
-  useEffect(() => { getAegisStatus().then(setStatus).catch(e => onNotice({ kind: "error", text: e.message })); }, [onNotice]);
-  async function send(e: FormEvent) { e.preventDefault(); try { setResponse(await sendAegisMessage(message)); setMessage(""); } catch (error) { onNotice({ kind: "error", text: error instanceof Error ? error.message : "Aegis request failed." }); } }
-  return <><PageTitle title="Aegis" subtitle="Authenticated security assistant integration." /><section className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6"><h2 className="font-semibold text-white">Onboarding status</h2><pre className="mt-4 overflow-auto rounded-xl bg-slate-950 p-4 text-xs text-slate-400">{JSON.stringify(status, null, 2)}</pre></section><form onSubmit={send} className="mt-5 rounded-2xl border border-slate-800 bg-slate-900/80 p-6"><label className="block text-sm text-slate-300">Message<textarea required value={message} onChange={e => setMessage(e.target.value)} rows={4} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 p-4 text-white outline-none focus:border-cyan-500" /></label><button className="mt-4 rounded-xl bg-cyan-500 px-5 py-3 font-semibold text-slate-950">Ask Aegis</button>{response && <pre className="mt-4 overflow-auto rounded-xl bg-slate-950 p-4 text-xs text-slate-400">{JSON.stringify(response, null, 2)}</pre>}</form></>;
+  const [status, setStatus] = useState<Record<string, unknown> | null>(null);
+  const [welcome, setWelcome] = useState<Record<string, unknown> | null>(null);
+  const [knowledge, setKnowledge] = useState<Record<string, unknown> | null>(null);
+  const [message, setMessage] = useState("");
+  const [response, setResponse] = useState<Record<string, unknown> | null>(null);
+  const [alertForm, setAlertForm] = useState({ severity: "high", title: "Malicious Network Request Detected", message: "" });
+  const [explanation, setExplanation] = useState<Record<string, unknown> | null>(null);
+
+  useEffect(() => {
+    Promise.all([getAegisWelcome(), getAegisStatus(), getAegisKnowledge()])
+      .then(([w, s, k]) => { setWelcome(w); setStatus(s); setKnowledge(k); })
+      .catch(e => onNotice({ kind: "error", text: e.message }));
+  }, [onNotice]);
+
+  async function send(e: FormEvent) {
+    e.preventDefault();
+    try { setResponse(await sendAegisMessage(message)); setMessage(""); }
+    catch (error) { onNotice({ kind: "error", text: error instanceof Error ? error.message : "Aegis request failed." }); }
+  }
+
+  async function explain(e: FormEvent) {
+    e.preventDefault();
+    try { setExplanation(await explainAlert(alertForm.severity, alertForm.title, alertForm.message)); }
+    catch (error) { onNotice({ kind: "error", text: error instanceof Error ? error.message : "Alert explanation failed." }); }
+  }
+
+  return <>
+    <PageTitle title="Aegis" subtitle="Authenticated security assistant integration." />
+    <div className="grid gap-5 lg:grid-cols-2">
+      <section className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6"><h2 className="font-semibold text-white">Welcome</h2><pre className="mt-4 max-h-56 overflow-auto rounded-xl bg-slate-950 p-4 text-xs text-slate-400">{JSON.stringify(welcome, null, 2)}</pre></section>
+      <section className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6"><h2 className="font-semibold text-white">Onboarding status</h2><pre className="mt-4 max-h-56 overflow-auto rounded-xl bg-slate-950 p-4 text-xs text-slate-400">{JSON.stringify(status, null, 2)}</pre></section>
+    </div>
+    <section className="mt-5 rounded-2xl border border-slate-800 bg-slate-900/80 p-6"><h2 className="font-semibold text-white">Knowledge</h2><pre className="mt-4 max-h-64 overflow-auto rounded-xl bg-slate-950 p-4 text-xs text-slate-400">{JSON.stringify(knowledge, null, 2)}</pre></section>
+    <form onSubmit={send} className="mt-5 rounded-2xl border border-slate-800 bg-slate-900/80 p-6"><label className="block text-sm text-slate-300">Message<textarea required value={message} onChange={e => setMessage(e.target.value)} rows={4} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 p-4 text-white outline-none focus:border-cyan-500" /></label><button className="mt-4 rounded-xl bg-cyan-500 px-5 py-3 font-semibold text-slate-950">Ask Aegis</button>{response && <pre className="mt-4 overflow-auto rounded-xl bg-slate-950 p-4 text-xs text-slate-400">{JSON.stringify(response, null, 2)}</pre>}</form>
+    <form onSubmit={explain} className="mt-5 rounded-2xl border border-slate-800 bg-slate-900/80 p-6"><h2 className="font-semibold text-white">Explain an alert</h2><div className="mt-4 grid gap-4 sm:grid-cols-2"><Field label="Severity" value={alertForm.severity} onChange={v => setAlertForm({ ...alertForm, severity: v })} /><Field label="Title" value={alertForm.title} onChange={v => setAlertForm({ ...alertForm, title: v })} /><div className="sm:col-span-2"><Field label="Alert message" value={alertForm.message} onChange={v => setAlertForm({ ...alertForm, message: v })} /></div></div><button className="mt-4 rounded-xl border border-cyan-700 px-5 py-3 font-semibold text-cyan-300">Explain alert</button>{explanation && <pre className="mt-4 overflow-auto rounded-xl bg-slate-950 p-4 text-xs text-slate-400">{JSON.stringify(explanation, null, 2)}</pre>}</form>
+  </>;
 }
 
 function SystemPage() {
