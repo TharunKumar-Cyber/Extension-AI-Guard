@@ -1,0 +1,57 @@
+{
+  "phase": 20,
+  "phase_name": "Security Dashboard",
+  "experiment_id": "EAG-PHASE20-DASHBOARD-001",
+  "status": "implementation_complete_verification_pending",
+  "recorded_at": "2026-09-29",
+  "frontend": {
+    "framework": "React",
+    "react_version": "19.2.8",
+    "typescript_version": "6.0.2",
+    "vite_version": "8.3.x",
+    "tailwind_version": "4.3.3",
+    "tailwind_vite_plugin": "4.3.3",
+    "lint": "Oxlint 1.81.x",
+    "api_base_default": "http://127.0.0.1:8000"
+  },
+  "backend": {
+    "version": "0.1.0",
+    "dashboard_read_endpoints": [
+      "/api/dashboard/summary",
+      "/api/dashboard/detections",
+      "/api/dashboard/alerts",
+      "/api/dashboard/security-events"
+    ],
+    "persistence_tables": [
+      "dashboard_network_requests",
+      "dashboard_detections",
+      "dashboard_alerts",
+      "dashboard_security_events"
+    ]
+  },
+  "security_controls": [
+    "JWT-protected dashboard read APIs",
+    "centralized frontend JWT attachment",
+    "authentication failure token cleanup",
+    "no frontend security-rule duplication",
+    "no fabricated historical metrics",
+    "local development CORS allowlist"
+  ],
+  "automation": {
+    "workflow": ".github/workflows/phase20.yml",
+    "checks": [
+      "backend compileall",
+      "dashboard API registration",
+      "frontend npm install",
+      "frontend lint",
+      "frontend production build"
+    ],
+    "successful_run_verified": false
+  },
+  "limitations": [
+    "Connected GitHub tooling cannot execute the user's exact local Windows EAG environment.",
+    "A successful Phase 20 build/test run has not been observed in this conversation.",
+    "Dashboard records are currently global persisted records rather than user-owned records because the existing Phase 19 network-request POST contract is unauthenticated.",
+    "No historical metrics are claimed beyond persisted records created through the dashboard-enabled backend path."
+  ]
+}
