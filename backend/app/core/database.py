@@ -25,6 +25,17 @@ else:
     SessionLocal = None
 
 
+def initialize_database() -> None:
+    """Create any newly introduced local tables without altering existing data."""
+    if engine is None:
+        return
+
+    # Import models so their tables are registered on Base.metadata.
+    import backend.app.models  # noqa: F401
+
+    Base.metadata.create_all(bind=engine)
+
+
 def get_db():
     """Provide a database session to API endpoints."""
     if SessionLocal is None:
