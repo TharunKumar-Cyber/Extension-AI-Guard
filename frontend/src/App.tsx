@@ -212,7 +212,8 @@ function Overview() {
 
 function DetectionPage({ onNotice }: { onNotice: (n: Notice) => void }) {
   const [form, setForm] = useState({ request_id: `req-${Date.now()}`, url: "http://example.test/", method: "GET", domain: "example.test", timestamp: new Date().toISOString() });
-  const [result, setResult] = useState<Detection | null>(null);\n  const [analysisDetails, setAnalysisDetails] = useState<{ alert: Alert | null; security_event: SecurityEvent } | null>(null);
+  const [result, setResult] = useState<Detection | null>(null);
+  const [analysisDetails, setAnalysisDetails] = useState<{ alert: Alert | null; security_event: SecurityEvent } | null>(null);
   const [busy, setBusy] = useState(false);
   async function submit(e: FormEvent) {
     e.preventDefault(); setBusy(true); onNotice(null);
