@@ -1,3 +1,6 @@
 fastapi==0.141.1
 uvicorn==0.52.4
 pydantic-settings==2.15.0
+httpx2==2.13.1
+httpcore2==2.13.1
+truststore==0.10.4
